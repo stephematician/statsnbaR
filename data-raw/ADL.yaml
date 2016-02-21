@@ -1,0 +1,104 @@
+# Purpose is to provide a "layer" between the names that stats.nba.com uses
+# and the names used in the code, so that if stats.nba.com changes their
+# naming then only this file needs to be changed in the package.
+# 
+# Manually recorded from stats.nba.com
+# 
+# Stephen Wade
+# 21/02/2016
+
+host : "http://stats.nba.com/"
+
+filters  :
+    &league league :
+        mapping : {
+            NBA      : "00",    # NBA
+            D-league : "20"    # D-League
+            }
+        default : NBA
+    &only_current only_current :
+        mapping : {
+            FALSE : 0,
+            TRUE  : 1
+            }
+        default : FALSE
+    &season season :
+        mapping : {
+            2015 : "2015-16",
+            2014 : "2014-15",
+            2013 : "2013-14",
+            2012 : "2012-13",
+            2011 : "2011-12",
+            2010 : "2010-11",
+            2009 : "2009-10",
+            2008 : "2008-09",
+            2007 : "2007-08",
+            2006 : "2006-07",
+            2005 : "2005-06",
+            2004 : "2004-05",
+            2003 : "2003-04",
+            2002 : "2002-03",
+            2001 : "2001-02",
+            2000 : "2000-01",
+            1999 : "1999-00",
+            1998 : "1998-99",
+            1997 : "1997-98",
+            1996 : "1996-97"
+            }
+        default : 2015
+
+data    :
+    &person_id person_id :
+        class   : numeric
+    &first_name first_name :
+        class   : first_name
+    &last_name last_name :
+        class   : last_name
+    &active roster_status :
+        class   : logical
+        mapping : {
+            0 : FALSE,    # not active
+            1 : TRUE      # active player
+            }
+    &year_start year_start :
+        class   : integer
+    &year_end year_end :
+        class   : integer
+    &team_id item_id :
+        class   : numeric
+    &team_city team_city :
+        class   : character
+    &team_name team_name :
+        class   : character
+    &team_abbr team_abbr :
+        class   : character
+    &played played :
+        class   : logical
+        mapping : {
+            'Y' : TRUE,    # played
+            'N' : FALSE    # never played
+            }
+
+endpoints:
+    PlayerCommon:
+        api.name     : "commonallplayers"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/players"
+        api.filters  :
+            *league       : "LeagueID"
+            *only_current : "IsOnlyCurrentSeason"
+            *season       : "Season"
+        api.results :
+            CommonAllPlayers : {
+                *person_id    : "person_id",
+                *first_name   : "display_last_comma_first",
+                *last_name    : "display_last_comma_first",
+                *active       : "rosterstatus",
+                *year_start   : "from_year",
+                *year_end     : "to_year",
+                *team_id      : "team_id",
+                *team_city    : "team_city",
+                *team_name    : "team_name",
+                *team_abbr    : "team_abbreviation",
+                *played       : "games_played_flag",
+                }

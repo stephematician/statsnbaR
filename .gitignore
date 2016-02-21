@@ -1,0 +1,8 @@
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# example code
+*-Ex.R
+
+
