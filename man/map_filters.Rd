@@ -8,13 +8,47 @@ map_filters(filters, api.endpoint)
 }
 \arguments{
 \item{filters}{The statsnbaR filter key-value pairs.}
+
+\item{api.endpoint}{statsnbaR specification of the stats.nba.com API
+endpoint}
 }
 \value{
-Named list of key-values mapped to stats.nba.com API key-value
-pairs.
+Named list of statsnbaR key-values mapped to stats.nba.com API
+  key-value pairs.
 }
 \description{
 Translates the key-values in a named list of statsnbaR key-value pairs to
-key-value pairs that the stats.nba.com API recognises.
+key-value pairs that the stats.nba.com API recognises for use in the
+calls to \code{httr::GET} in \code{\link{api_scrape}}.
 }
+\details{
+The stats.nba.com API end-point description is given in the internal
+YAML which provides the translation of keys that statsnbaR specifies
+to keys that stats.nba.com recognises, e.g. \sQuote{league} in statsnbaR is
+translated to \dQuote{LeagueID} for stats.nba.com in this example:
+\preformatted{
+endpoints :
+    PlayerCommon :
+         api.filters  :
+             league       : "LeagueID"
+             ...
+}
+
+The values are mapped according to the filter mappings also specified
+in the internal YAML data, e.g:
+\preformatted{
+filters :
+    league :
+        mapping : \{
+            NBA      : "00",
+            D-League : "20"
+            \}
+        default : NBA
+    ...
+}
+Thus \sQuote{NBA} would be mapped to \dQuote{00}.
+
+#' @seealso \code{\link{map_filter_values}}
+}
+\keyword{internal}
 

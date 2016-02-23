@@ -5,6 +5,7 @@
 #'
 #'
 #' @author Stephen Wade
+#' @keywords internal
 NULL
 
 library(yaml)

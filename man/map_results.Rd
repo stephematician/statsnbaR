@@ -15,6 +15,33 @@ map_results(df, api.mapping)
 The data frame with mapped values
 }
 \description{
-Here's a description.
+This takes the data.frames returned by \code{\link{flatten_json_rowSet}}
+and converts the attributes (columns) to the desired data types specified
+by statsnbaR's internal YAML.
 }
+\details{
+The column name is used to identify the correct mapping and/or type
+conversion function. The mappings and data types are specified in the
+statsnbaR internal YAML data, available at
+\url{https://www.github.com/stephematician/statsnbaR/tree/master/data-raw/ADL.yaml}
+
+The YAML specification of the data type might look as follows:
+\preformatted{
+data    :
+    played :
+        class   : logical
+        mapping : \{
+            'Y' : TRUE,    # played
+            'N' : FALSE    # never played
+            \}
+}
+
+Now any column named \sQuote{played} would be mapped from the character
+values to a logical TRUE or FALSE, and converted to the logical class
+(a redundant step for this example).
+}
+\seealso{
+\code{\link{type_converters}} \code{\link{map_result_values}}
+}
+\keyword{internal}
 

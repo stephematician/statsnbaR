@@ -2,6 +2,7 @@
 #'
 #' @name player
 #' @include scrape.R
+#' @keywords internal
 NULL
 
 #' Retrieve current and historical player data

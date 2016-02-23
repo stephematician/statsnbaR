@@ -1,3 +1,5 @@
 ^data-raw$
 inst/doc/*
 .gitignore
+README.md
+.git

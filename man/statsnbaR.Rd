@@ -4,7 +4,7 @@
 \name{statsnbaR}
 \alias{statsnbaR}
 \alias{statsnbaR-package}
-\title{stats.nba.com API interface for R}
+\title{R interface to stats.nba.com}
 \description{
 This is a simple interface to stats.nba.com based off of the Python package
 \href{https://github.com/seemethere/nba_py}{nba_py}

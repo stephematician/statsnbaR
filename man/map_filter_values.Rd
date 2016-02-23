@@ -10,11 +10,32 @@ map_filter_values(filters)
 \item{filters}{The statsnbaR filter key-value pairs}
 }
 \value{
-Named list of key-values with values mapped to stats.nba.com API
-values
+Named list of key-values with \emph{values} mapped to stats.nba.com 
+  API values
 }
 \description{
-Translates the values in a named list of statsnbaR key-value pairs to
+Translates the \emph{values} in a named list of statsnbaR key-value pairs to
 values that the stats.nba.com API recognises.
 }
+\details{
+The mappings for each filter are specified in the internal YAML data
+which look, for example, like the following:
+\preformatted{
+filters :
+    league :
+        mapping : \{
+            NBA      : "00",
+            D-League : "20"
+            \}
+        default : NBA
+}
+When we say that only the \emph{value} is mapped, that means we do not
+map the key-name \sQuote{league} to the key-name that stats.nba.com
+expects. We simply map the value 'NBA' that statsnbaR accepts to the value
+"00" that the stats.nba.com API expects. Simple, yes?
+}
+\seealso{
+\code{\link{map_filters}}
+}
+\keyword{internal}
 

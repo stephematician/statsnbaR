@@ -2,11 +2,39 @@
 % Please edit documentation in R/utils.R
 \name{map_result_values}
 \alias{map_result_values}
-\title{Title of this thing}
+\title{Convert character data from stats.nba.com to statsnbaR 'useful' data types}
 \usage{
 map_result_values(df)
 }
-\description{
-A description of this thing
+\arguments{
+\item{df}{The flattened JSON data.frame from stats.nba.com with statsnbaR
+attribute names.}
 }
+\value{
+Data.frame of converted and mapped data.
+}
+\description{
+Convert all columns of a data.frame using the specified mapping and type
+conversion function as per the internal YAML data.
+}
+\details{
+The YAML specification of the data type might look as follows:
+\preformatted{
+data    :
+    played :
+        class   : logical
+        mapping : \{
+            'Y' : TRUE,    # played
+            'N' : FALSE    # never played
+            \}
+}
+
+Now any column named \sQuote{played} would be mapped from the character
+values to a logical TRUE or FALSE, and converted to the logical class
+(a redundant step for this example).
+}
+\seealso{
+\code{\link{type_converters}}
+}
+\keyword{internal}
 

@@ -79,8 +79,8 @@ data    :
             'N' : FALSE    # never played
             }
 
-endpoints:
-    PlayerCommon:
+endpoints :
+    PlayerCommon :
         api.name     : "commonallplayers"
         api.path     : "stats"
         api.referrer : "http://stats.nba.com/players"

@@ -4,12 +4,24 @@
 \name{type_converters}
 \alias{type_converters}
 \title{Named type conversion functions}
-\format{An object of class \code{list} of length 12.}
+\format{A named list of type-conversion functions. Some of these
+are standard functions such as as.integer, while others are
+specified in source code, e.g.
+\describe{
+    \item{date}{convert using \code{as.Date()}}
+    \item{last_name}{extract last name from 'lastname, firstname'}
+    \item{first_name}{extract first name from 'lastname, firstname'}
+    \item{...}{convert to data type corresponding to name}
+}
+
+The source code can be found at
+\url{http://www.github.com/stephematicina/statsnbaR/tree/master/R/utils.R}}
 \usage{
 type_converters
 }
 \description{
-Descriptiony
+List of functions to parse data returned by stats.nba.com into (hopefully)
+meaningul or intuitive R data types.
 }
 \keyword{datasets}
 

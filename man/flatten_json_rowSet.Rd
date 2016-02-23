@@ -14,8 +14,16 @@ A data.frame for the flattened JSON rowSet
 }
 \description{
 Takes a list provided by JSON and flattens the rowSet element to a
-data.frame. This is acheived by forcing any NULL values to NA, and then
+data.frame.
+}
+\details{
+The list is flattended by forcing any NULL values to NA, and then
 applying the unlist function. The data.frame is then returned with the
 attribute names set to the headers specified in the JSON data.
 }
+\seealso{
+\code{\link{type_converters}} \code{\link{map_results}}
+\code{\link{map_result_values}}
+}
+\keyword{internal}
 

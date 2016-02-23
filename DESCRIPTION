@@ -1,8 +1,8 @@
 Package: statsnbaR
 Type: Package
-Title: stats.nba.com API interface for R
+Title: R interface to stats.nba.com
 Version: 0.1
-Date: 2016-02-08
+Date: 2016-02-22
 Authors@R: c(person("Stephen",
                      "Wade",
                      role=c('aut', 'cre'),
@@ -12,8 +12,8 @@ Depends:
     R (>= 3.2.1),
     httr
 Maintainer: Stephen Wade <stephematician@gmail.com>
-Description: Extracts data from the API end-points of stats.nba.com for analysis
-    in R.
+Description: Provides utility functions to download data from the API end-points
+  of stats.nba.com for analysis in R.
 License: MIT + file LICENSE
 Suggests:
     testthat

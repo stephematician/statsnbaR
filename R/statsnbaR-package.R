@@ -1,4 +1,4 @@
-#' stats.nba.com API interface for R
+#' R interface to stats.nba.com
 #'
 #' This is a simple interface to stats.nba.com based off of the Python package
 #' \href{https://github.com/seemethere/nba_py}{nba_py}
