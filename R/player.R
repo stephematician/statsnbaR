@@ -36,6 +36,10 @@ get_players <- function(league, season) {
          filters$league <- league
     }
 
-    api_scrape('PlayerCommon',
-               filters=filters)
+    r <- api_scrape('PlayerCommon', filters=filters)[[1]]
+
+    if (length(r) != 1) stop(paste('[statsnbaR get_players] unexpected number',
+                                   'of result sets returned by stats.nba.com')
+    return(r[[1]])
 }
+

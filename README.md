@@ -32,9 +32,9 @@ given in this
 [blog post](http://www.gregreda.com/2015/02/15/web-scraping-finding-the-api).
 In order to semi-future-proof the package, the queries to these end-points and
 the data extracted from them are evaluated through a fairly informal
-abstract data layer (ADL). The ADL is specified in internal data extracted,
+abstract data layer (ADL). The ADL is specified in internal data extracted
 from a YAML which can be viewed on github:
-<http://www.github.com/stephematician/statsnbaR/tree/master/data-raw>.
+<http://www.github.com/stephematician/statsnbaR/tree/master/data-raw/ADL.yaml>.
 
 The package is split into player, team and game data. All the functions are
 fully documented, and so details can be found there. However for the sake of
@@ -59,7 +59,7 @@ nba_players <- get_players(league='NBA')
 tail(nba_players)
 ```
 
-```
+```r
 
 ```
 
@@ -69,3 +69,18 @@ tail(nba_players)
 
 ### Shot chart examples
 
+### Notes
+
+This package was built and tested with the following R software:
+```
+> sessionInfo()
+R version 3.2.3 (2015-12-10)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 14.04.4 LTS
+
+other attached packages:
+[1] statsnbaR_0.1 httr_1.1.0
+
+loaded via a namespace (and not attached):
+[1] R6_2.1.2        curl_0.9.6      jsonlite_0.9.19
+```

@@ -126,24 +126,24 @@ api_scrape <- function(endpoint, filters) {
 
     # Check that all filters are valid for this endpoint, and that all the
     # filters required for the endpoint are specified.
-    if (!all(names(filters) %in% names(ADL.endpoint$api.filters))) {
-        flagged <- !(names(filters) %in% names(ADL.endpoint$api.filters))
-        stop(paste('[statsnbaR scrape] invalid filters -',
-                   paste(names(filters)[flagged],
-                         collapse=' '),
-                   '- specified for stats.nba.com endpoint',
-                   ADL.endpoint$api.name))
+    if (!identical(names(filters) %in% names(ADL.endpoint$api.filters))) {
+        invalid_filters <- !(names(filters) %in%
+                             names(ADL.endpoint$api.filters))
+        missing_filters <- !(names(ADL.endpoint$api.filters) %in%
+                             names(filters))
+        MFmsg <- paste('missing filters (',
+                       paste(names(ADL.endpoint$api.filters)[missing_filters],
+                             collapse=', '),
+                       ') for stats.nba.com endpoint',
+                       ADL.endpoint$api.name, '\n')        
+        IFmsg <- paste('invalid filters (',
+                       paste(names(filters)[invalid_filters],
+                             collapse=', '),
+                       ') specified for stats.nba.com endpoint',
+                       ADL.endpoint$api.name, '\n')        
+        stop(paste('[statsnbaR scrape]', MFmsg, IFmsg))
     }
     
-    if (!all(names(ADL.endpoint$api.filters) %in% names(filters))) {
-        flagged <- !(names(ADL.endpoint$api.filters) %in% names(filters))
-        stop(paste('[statsnbaR scrape] missing filters -',
-                   paste(names(ADL.endpoint$api.filters)[flagged],
-                         collapse=' '),
-                   '- for stats.nba.com endpoint',
-                   ADL.endpoint$api.name))
-    }
-
     # Get the stats.nba.com form of the filters
     ADL.filters <- map_filters(filters, ADL.endpoint)
 

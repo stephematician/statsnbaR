@@ -13,7 +13,7 @@ filters  :
     &league league :
         mapping : {
             NBA      : "00",    # NBA
-            D-league : "20"    # D-League
+            D-league : "20"     # D-League
             }
         default : NBA
     &only_current only_current :
