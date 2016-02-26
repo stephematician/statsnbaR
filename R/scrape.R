@@ -1,3 +1,11 @@
+#' Main scrape function
+#'
+#' @name scrape
+#' @include utils.R
+#' @include statsnbaR-package.R
+#' @keywords internal
+NULL
+
 #' Scrape stats.nba.com API and return statsnbaR data
 #'
 #' Perform a query on a recognised endpoint of stats.nba.com, and
@@ -101,6 +109,7 @@
 #'   with inferred data types.
 #'
 #' @include utils.R
+#' @include statsnbaR-package.R
 #' @importFrom httr GET
 #' @importFrom httr content
 #' @importFrom httr add_headers
@@ -132,17 +141,23 @@ api_scrape <- function(endpoint, filters) {
                              names(ADL.endpoint$api.filters))
         missing_filters <- !(names(ADL.endpoint$api.filters) %in%
                              names(filters))
-        MFmsg <- paste0('missing filters (',
-                        paste(names(ADL.endpoint$api.filters)[missing_filters],
-                              collapse=', '),
-                        ') for stats.nba.com endpoint ',
-                        ADL.endpoint$api.name, '\n')
-        IFmsg <- paste0('invalid filters (',
-                        paste(names(filters)[invalid_filters],
-                              collapse=', '),
-                        ') specified for stats.nba.com endpoint ',
-                        ADL.endpoint$api.name, '\n')
-        stop(paste('[statsnbaR scrape]', MFmsg, IFmsg))
+        MFmsg <- ''
+        if (any(missing_filters))
+            MFmsg <- paste0(
+                'missing filters (',
+                paste(names(ADL.endpoint$api.filters)[missing_filters],
+                      collapse=', '),
+                ') for stats.nba.com endpoint ',
+                ADL.endpoint$api.name, '\n'
+            )
+        IFmsg <- ''
+        if (any(invalid_filters))
+            IFmsg <- paste0('invalid filters (',
+                            paste(names(filters)[invalid_filters],
+                                  collapse=', '),
+                            ') specified for stats.nba.com endpoint ',
+                            ADL.endpoint$api.name, '\n')
+        stop(paste('[statsnbaR scrape]', paste0(MFmsg, IFmsg)))
     }
 
     # Get the stats.nba.com form of the filters

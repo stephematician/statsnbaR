@@ -7,10 +7,65 @@
 per_player_data(filters = filter_per_player(), clutch = FALSE,
   measurement = "base")
 }
-\value{
-A data.frame with the
+\arguments{
+\item{filters}{A named list of key-value filters constructed by either
+\code{\link{filter_per_player}} if \code{clutch=FALSE} or
+\code{\link{filter_per_player_clutch}} if \code{clutch=TRUE}. Full list of
+avaiable filters that statsnbaR recognises is given in the documentation
+of those two filter constructor functions.}
+
+\item{clutch}{A logical value indicating whether to extract the
+\sQuote{clutch} data, i.e. to only include plays that occurred during
+\sQuote{clutch} time in the aggregation.}
+
+\item{measurement}{A character string representing the desired dataset
+  \describe{
+    \item{base}{The traditional player statistics such as field goals,
+      rebounds, assists etc.}
+    \item{advanced}{The advanced player statistics such as offensive and
+      defensive ratings, effective field goal %age, PIE and pace, and
+      others.}
+    \item{miscellaneous}{Miscellaneous player statistics such as points in
+      the paint, fastbreak points, opponent points in the paint, blocks,
+      fouls, etc.}
+    \item{scoring}{Scoring player statistics such as the percentage
+      of points off turnovers, in the paint, points that were assisted on
+      etc. by that player.}
+    \item{usage}{Usage statistics which are roughly the traditional
+      statistics but measured as the players percentage contribution of the
+      teams values while they are on court.}
+}}
 }
 \description{
 Retrieve the aggregated data for each player from stats.nba.com
+}
+\details{
+Collects player 'play' statistics as averages or other aggregates over games
+in different units such as total values, per game values, per possession
+values and so forth.
+
+The statistics are grouped into various categories which are determined
+by the value of the \code{measurement} argument. The categories are 
+\sQuote{base}, \sQuote{advanced}, \sQuote{miscellaneous}, \sQuote{scoring}
+and \sQuote{usage}.
+
+The filters are constructed by either \code{\link{filter_per_player}} if
+\code{clutch=FALSE} or \code{\link{filter_per_player_clutch}} if
+\code{clutch=TRUE}. The list of potential filters are documented in those
+functions. The units that the values/data is aggregated into is determined
+by the \code{per} filter. The value of \code{clutch} argument is used to
+to plays that occured during clutch time.
+}
+\examples{
+\dontrun{
+  # Get data to compare clutch vs regular performance.
+  ppd <- per_player_data(filter_per_player(season=2014))
+  ppdc <- per_player_data(filter_per_player_clutch(season=2014))
+}
+
+}
+\seealso{
+\code{\link{filter_per_player}}
+  \code{\link{filter_per_player_clutch}}
 }
 

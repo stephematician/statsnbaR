@@ -1,8 +1,10 @@
 #' Player data
 #'
 #' @name player
+#' @include filter_player.R
 #' @include scrape.R
 #' @include utils.R
+#' @include statsnbaR-package.R
 #' @keywords internal
 NULL
 
@@ -44,7 +46,6 @@ get_players <- function(league, season) {
                     league=statsnbaR.ADL.filters$league$default)
 
     if (!missing(season)) {
-        # todo - need to check if its numeric etc
         mapping <- statsnbaR.ADL.filters$season$mapping
         mapped_season <- season
         if (!is.null(mapping))
@@ -73,147 +74,69 @@ get_players <- function(league, season) {
     return(r[[1]])
 }
 
-#'
-get_player_bios <- function() {
+#
+#get_player_bios <- function() {
+#
+#}
 
-}
 
-#' Generate filters for a \sQuote{per player} data query.
-#'
-#' @param endpoint List containing stats.nba.com API endpoing specification.
-#' @param ... List of key-value pairs to use as filters in a query to the
-#'   per-player data endpoint of stats.nba.com
-#'
-#' @return A list of key-value pairs for passing to the per-player query
-#'   functions
-#'
-#' @keywords internal
-#' @author Stephen Wade
-filter_per_player_worker <- function(endpoint, ...) {
-
-    in_filters   <- list(...)
-    if ('measurement' %in% names(in_filters)) {
-        stop(paste('[statsnbaR filter_per_player_worker] cannot specify',
-                   '\'measurement\' as an argument to the filter constructor'))
-    }
-    if ('clutch' %in% names(in_filters)) {
-        stop(paste('[statsnbaR filter_per_player_worker] cannot specify',
-                   '\'clutch\' as an argument to the filter constructor'))
-    }
-    filter_names <- names(endpoint$api.filters)
-
-    if (!all(names(in_filters) %in% filter_names)) {
-        invalid_filters <- !(names(in_filters) %in% filter_names)
-        stop(paste0('[statsnbaR filter_per_player] invalid filters (',
-                    paste(names(in_filters)[invalid_filters],
-                          collapse=', '),
-                    ') specified for per player query.'))
-                            
-    }
-
-    filters <- lapply(filter_names,
-                      function(name) {
-                          in_filter <- in_filters[[name]]
-                          if (!is.null(in_filter)) {
-                              in_filter
-                          } else statsnbaR.ADL.filters[[name]]$default
-                      })
-    names(filters) <- filter_names
-    
-    return(filters)
-}
-
-#' Generate filters for a \sQuote{per player} data query.
-#'
-#' 
-#'
-#' \describe{
-#'     \item{college}{}
-#'     \item{conference}{}
-#'     \item{country}{}
-#'     \item{date_from}{}
-#'     \item{date_to}{}
-#'     \item{division}{}
-#'     \item{draft_pick}{}
-#'     \item{draft_year}{}
-#'     \item{game_scope}{}
-#'     \item{game_segment}{}
-#'     \item{height_segment}{}
-#'     \item{last_n}{}
-#'     \item{league}{}
-#'     \item{location}{}
-#'     \item{month}{}
-#'     \item{opponent_team}{}
-#'     \item{win_loss}{}
-#'     \item{playoff_round}{}
-#'     \item{pace_adjust}{}
-#'     \item{per}{}
-#'     \item{period}{}
-#'     \item{experience}{}
-#'     \item{position}{}
-#'     \item{plus_minus}{}
-#'     \item{rank}{}
-#'     \item{season}{}
-#'     \item{season_segment}{}
-#'     \item{season_type}{}
-#'     \item{shot_clock}{}
-#'     \item{starting_status}{}
-#'     \item{team_id}{}
-#'     \item{opponent_conference}{}
-#'     \item{opponent_division}{}
-#'     \item{weight_segment}{}
-#' }
-#'
-#' @param ... List of key-value pairs to use as filters in a query to the
-#'   per-player data endpoint of stats.nba.com
-#'
-#' @return A list of key-value pairs for passing to the per-player query
-#'   functions
-#'
-#' @seealso \code{\link{per_player_base}} \code{\link{per_player_advanced}}
-#'   \code{\link{per_player_miscellaneous}} \code{\link{per_player_scoring}}
-#'   \code{\link{per_player_usage}}
-filter_per_player <- function(...) {
-
-    filter_per_player_worker(statsnbaR.ADL.endpoints$per_player_base,
-                             ...)
-    
-}
-
-#' Generate filters for a \sQuote{per player} data query.
-#'
-#' Generates a list of filters with default values for per player data queries.
-#'
-#' This function is the same as the \code{\link{per_player_filters}} function
-#' with the addition of the filters to determine what \sQuote{clutch} time is.
-#'
-#'
-#' @param ... List of key-value pairs to use as filters in a query to the
-#'   per-player data endpoint of stats.nba.com. The additional clutch-related
-#'   key-value pairs are described (with their default values indicated at the
-#'   end in brackets.
-#'   \describe{
-#'     \item{clutch_time}{Number of seconds left in game: 300, 240, ..., 60, 30, 10 (300)}
-#'     \item{lead}{Whether the team is ahead or behind (incl. tied): 'any', 'ahead', 'behind' ('any')}
-#'     \item{point_diff}{The size of the point differential: 1--5 (5)}
-#'   }
-#'
-#' @return A list of key-value pairs for passing to the per-player query
-#'   functions
-#'
-#' @seealso \code{\link{per_player_filters}}
-filter_per_player_clutch <- function(...) {
-
-    filter_per_player_worker(statsnbaR.ADL.endpoints$per_player_base_clutch,
-                             ...)
-    
-}
                            
 #' Retrieve \sQuote{per player} data
 #'
 #' Retrieve the aggregated data for each player from stats.nba.com
 #'
-#' @return A data.frame with the 
+#' Collects player 'play' statistics as averages or other aggregates over games
+#' in different units such as total values, per game values, per possession
+#' values and so forth.
+#'
+#' The statistics are grouped into various categories which are determined
+#' by the value of the \code{measurement} argument. The categories are 
+#' \sQuote{base}, \sQuote{advanced}, \sQuote{miscellaneous}, \sQuote{scoring}
+#' and \sQuote{usage}.
+#'
+#' The filters are constructed by either \code{\link{filter_per_player}} if
+#' \code{clutch=FALSE} or \code{\link{filter_per_player_clutch}} if
+#' \code{clutch=TRUE}. The list of potential filters are documented in those
+#' functions. The units that the values/data is aggregated into is determined
+#' by the \code{per} filter. The value of \code{clutch} argument is used to
+#  indicate if additional filters are applied that restrict the data collected
+#' to plays that occured during clutch time.
+#'
+#' @param filters A named list of key-value filters constructed by either
+#'   \code{\link{filter_per_player}} if \code{clutch=FALSE} or
+#'   \code{\link{filter_per_player_clutch}} if \code{clutch=TRUE}. Full list of
+#'   avaiable filters that statsnbaR recognises is given in the documentation
+#'   of those two filter constructor functions.
+#' @param clutch A logical value indicating whether to extract the
+#'   \sQuote{clutch} data, i.e. to only include plays that occurred during
+#'   \sQuote{clutch} time in the aggregation.
+#' @param measurement A character string representing the desired dataset
+#'   \describe{
+#'     \item{base}{The traditional player statistics such as field goals,
+#'       rebounds, assists etc.}
+#'     \item{advanced}{The advanced player statistics such as offensive and
+#'       defensive ratings, effective field goal %age, PIE and pace, and
+#'       others.}
+#'     \item{miscellaneous}{Miscellaneous player statistics such as points in
+#'       the paint, fastbreak points, opponent points in the paint, blocks,
+#'       fouls, etc.}
+#'     \item{scoring}{Scoring player statistics such as the percentage
+#'       of points off turnovers, in the paint, points that were assisted on
+#'       etc. by that player.}
+#'     \item{usage}{Usage statistics which are roughly the traditional
+#'       statistics but measured as the players percentage contribution of the
+#'       teams values while they are on court.}
+#' }
+#'
+#' @examples \dontrun{
+#'   # Get data to compare clutch vs regular performance.
+#'   ppd <- per_player_data(filter_per_player(season=2014))
+#'   ppdc <- per_player_data(filter_per_player_clutch(season=2014))
+#' }
+#'
+#' @seealso \code{\link{filter_per_player}}
+#'   \code{\link{filter_per_player_clutch}}
+#' 
 per_player_data <- function(filters=filter_per_player(),
                             clutch=FALSE,
                             measurement='base') {
@@ -229,8 +152,14 @@ per_player_data <- function(filters=filter_per_player(),
     if (clutch) {
         # need to remove whatever measurement has been set
         filters <- filters[-which(names(filters) == 'measurement')]
+        chk_length <- length(filters)
         filters <- do.call('filter_per_player_clutch',
                            filters)
+        if(chk_length != length(filters)) 
+            warning(paste('[statsnbaR per_player_data] using default clutch',
+                          'definition, to avoid this warning use',
+                          'filter_player_clutch() to construct filters when',
+                          '\'clutch=TRUE\''))
         clutch_str <- '_clutch'
     }
     

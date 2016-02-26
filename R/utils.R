@@ -1,3 +1,10 @@
+#' Utility functions
+#'
+#' @name utils
+#' @include statsnbaR-package.R
+#' @keywords internal
+NULL
+
 #' Named type conversion functions
 #'
 #' List of functions to parse data returned by stats.nba.com into (hopefully)

@@ -116,11 +116,11 @@ filters  :
     &location location :
         class   : character
         mapping : {
-            both : NULL,
+            all  : NULL,
             home : "Home",
             away : "Away"
             }
-        default: both
+        default: all
     &measurement measurement :
         class : character
         mapping : {
@@ -156,11 +156,11 @@ filters  :
     &win_loss win_loss :
         class   : character
         mapping : {
-            both : NULL,
+            all  : NULL,
             win  : "W",
             loss : "L"
             }
-        default : both
+        default : all
     &playoff_round playoff_round : 
         class   : integer
         default : 0

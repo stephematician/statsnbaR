@@ -43,4 +43,19 @@ test_that(
                                      clutch=TRUE),
                      paste('\\[statsnbaR per_player_data\\] filters must be a',
                            'valid key-pair list recognised by statsnbaR'))
+        expect_warning(per_player_data(filter_per_player(),
+                                       clutch=TRUE),
+                       paste('\\[statsnbaR per_player_data\\] using default',
+                             'clutch definition, to avoid this warning use',
+                             'filter_player_clutch\\(\\) to construct filters',
+                             'when \'clutch=TRUE\''))
     })
+
+test_that(
+    'per_player_data fails when filters are clutch but clutch is false',
+    {
+        expect_error(per_player_data(filters=filter_per_player_clutch()),
+                     paste('invalid filters.+specified for stats\\.nba\\.com',
+                           'endpoint.+'))
+    })
+

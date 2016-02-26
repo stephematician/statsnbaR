@@ -1,7 +1,9 @@
 #' R interface to stats.nba.com
 #'
+#' A simple interface to stats.nba.com providing basic query functionality
+#'
 #' This is a simple interface to stats.nba.com based off of the Python package
-#' \href{https://github.com/seemethere/nba_py}{nba_py}
+#' \href{https://github.com/seemethere/nba_py}{nba_py}.
 #'
 #' Before going into any further details of the package, there are some
 #' house-keeping tasks:
@@ -33,6 +35,7 @@
 #'
 #' @seealso \pkg{yaml}, \pkg{httr}
 #'
+#' @name statsnbaR-package
+#' @aliases statsnbaR statsnbaR-package
 #' @docType package
-#' @name statsnbaR
 NULL
