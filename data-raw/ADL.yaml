@@ -5,47 +5,300 @@
 # Manually recorded from stats.nba.com
 # 
 # Stephen Wade
-# 21/02/2016
+# 26/02/2016
 
 host : "http://stats.nba.com/"
 
 filters  :
     &league league :
+        class   : character
         mapping : {
             NBA      : "00",    # NBA
             D-league : "20"     # D-League
             }
         default : NBA
     &only_current only_current :
+        class   : numeric
         mapping : {
             FALSE : 0,
             TRUE  : 1
             }
         default : FALSE
     &season season :
-        mapping : {
-            2015 : "2015-16",
-            2014 : "2014-15",
-            2013 : "2013-14",
-            2012 : "2012-13",
-            2011 : "2011-12",
-            2010 : "2010-11",
-            2009 : "2009-10",
-            2008 : "2008-09",
-            2007 : "2007-08",
-            2006 : "2006-07",
-            2005 : "2005-06",
-            2004 : "2004-05",
-            2003 : "2003-04",
-            2002 : "2002-03",
-            2001 : "2001-02",
-            2000 : "2000-01",
-            1999 : "1999-00",
-            1998 : "1998-99",
-            1997 : "1997-98",
-            1996 : "1996-97"
-            }
+        class   : api_season   # YYYY-YY+1
         default : 2015
+    &college college :
+        class : character
+        mapping : {
+            all : NULL
+        }
+        default : all
+    &conference conference :
+        class   : character
+        mapping : {
+            both : NULL,
+            east : "East",
+            west : "West"
+            }
+        default : both
+    &country country :
+        class   : character
+        default : NULL
+    &date_from date_from :
+        class   : api_date    # MM/DD/YYYY
+        default : NULL
+    &date_to date_to :
+        class   : api_date    # MM/DD/YYYY
+        default : NULL
+    &division division : 
+        class   : character
+        mapping : {
+            all        : NULL,
+            atlantic   : "Atlantic",
+            central    : "Central",
+            north_west : "Northwest",
+            pacific    : "Pacific",
+            south_east : "Southeast",
+            south_west : "Southwest"
+            }
+        default : all
+    &draft_pick draft_pick :
+        class   : character
+        mapping : {
+            all          : NULL,
+            first_round  : "1st Round",
+            second_round : "2nd Round",
+            first_pick   : "1st Pick",
+            lottery      : "Lottery Pick",
+            #top_five    : "Top 5 Pick",
+            #top_ten     : "Top 10 Pick",
+            #top_fifteen : "Top 15 Pick",
+            #top_twenty  : "Top 20 Pick",
+            #second_ten  : "Picks 11 Thru 20",
+            #second_ten  : "Picks 21 Thru 30",
+            undrafted    : "Undrafted"
+            }
+        default : all
+    &draft_year draft_year :
+        class   : integer
+        default : NULL
+    &game_scope game_scope :
+        class   : character
+        default : NULL
+    &game_segment game_segment :
+        class   : character
+        mapping : {
+            full_game   : NULL,
+            first_half  : "First Half",
+            second_half : "Second Half",
+            overtime    : "Overtime"
+            }
+        default : full_game
+    &height_segment height_segment :
+        class   : character
+        mapping : {
+            all           : NULL,
+            lt_six        : "LT 6-0",
+            gte_six       : "GT 6-0",
+            lt_six_four   : "LT 6-4",
+            gte_six_four  : "GT 6-4",
+            lt_six_seven  : "LT 6-7",
+            gte_six_seven : "GT 6-7",
+            lt_six_ten    : "LT 6-10",
+            gte_six_ten   : "GT 6-10",
+            lt_seven      : "LT 7-0",
+            gte_seven     : "GT 7-0"
+            }
+        default : all
+    &last_n last_n :
+        class   : integer
+        default : 0
+    &location location :
+        class   : character
+        mapping : {
+            both : NULL,
+            home : "Home",
+            away : "Away"
+            }
+        default: both
+    &measurement measurement :
+        class : character
+        mapping : {
+            base          : "Base",
+            advanced      : "Advanced",
+            miscellaneous : "Misc",
+            scoring       : "Scoring",
+            usage         : "Usage",
+            opponent      : "Opponent"
+            }
+        default : base
+    &month month :
+        class   : integer
+        mapping : {
+            all : 0,
+            oct : 1,
+            nov : 2,
+            dec : 3,
+            jan : 4,
+            feb : 5,
+            mar : 6,
+            apr : 7,
+            may : 8,
+            jun : 9,
+            jul : 10,
+            aug : 11,
+            sep : 12
+            }
+        default : all
+    &opponent_team opponent_team : 
+        class   : integer
+        default : 0
+    &win_loss win_loss :
+        class   : character
+        mapping : {
+            both : NULL,
+            win  : "W",
+            loss : "L"
+            }
+        default : both
+    &playoff_round playoff_round : 
+        class   : integer
+        default : 0
+    &pace_adjust pace_adjust :
+        class   : character
+        mapping : {
+            FALSE : "N",
+            TRUE  : "Y"
+            }
+        default : FALSE
+    &per per : 
+        class : character
+        mapping : {
+            total            : "Totals",
+            game            : "PerGame",
+            possessions_100 : "Per100Possessions",
+            plays_100       : "Per100Plays",
+            possession      : "PerPossession",
+            play            : "PerPlay",
+            minute          : "PerMinute",
+            minutes_48      : "Per48",
+            minutes_40      : "Per40",
+            minutes_36      : "Per36",
+            inverse_minutes : "MinutesPer"
+            }
+        default : total
+    &period period :
+        class   : integer
+        default : 0
+    &experience experience :
+        class : character
+        mapping : {
+            all       : NULL,
+            rookie    : "Rookie",
+            sophomore : "Sophomore",
+            veteran   : "Veteran"
+            }
+        default : all
+    &position position :
+        class : character
+        mapping : {
+            all     : NULL,
+            center  : "C",
+            forward : "F",
+            guard   : "G"
+            }
+        default : all
+    &plus_minus plus_minus :    # Differentials on/off
+        class   : character
+        mapping : {
+            FALSE : "N",
+            TRUE  : "Y"
+            }
+        default : FALSE
+    &rank rank :
+        class : character
+        mapping : {
+            TRUE  : "Y",
+            FALSE : "N"
+            } 
+        default : FALSE
+    &season_segment season_segment :
+        class   : character
+        mapping : {
+            all          : NULL,
+            pre_allstar  : "Pre All-Star",
+            post_allstar : "Post All-Star"
+            }
+        default : all
+    &season_type season_type : 
+        class   : character
+        mapping : {
+            allstar   : "All Star",
+            playoff   : "Playoffs",
+            regular   : "Regular Season",
+            preseason : "Pre Season"
+            }
+        default : regular
+    &shot_clock shot_clock :
+        class   : character
+        mapping : {
+            all         : NULL,
+            super_early : "24-22",
+            very_early  : "22-18 Very Early",
+            early       : "18-15 Early",
+            average     : "15-7 Average",
+            late        : "7-4 Late",
+            very_late   : "4-0 Very Late",
+            off         : "ShotClock Off"
+            }
+        default : all
+    &starting_status starting_status :
+        class : character
+        mapping : {
+            all     : NULL,
+            bench   : "Bench",
+            starter : "Starters"
+            }
+        default : all
+    &team_id team_id :
+        class   : integer
+        default : 0
+    &opponent_conference  opponent_conference :
+        class   : character
+        mapping : {
+            both : NULL,
+            east : "East",
+            west : "West"
+            }
+        default : both
+    &opponent_division opponent_division : 
+        class   : character
+        mapping : {
+            all        : NULL,
+            atlantic   : "Atlantic",
+            central    : "Central",
+            north_west : "Northwest",
+            pacific    : "Pacific",
+            south_east : "Southeast",
+            south_west : "Southwest"
+            }
+        default : all
+    &weight_segment weight_segment :
+        class   : character
+        mapping : {
+            all : NULL,
+            lt_200  : "LT 200",
+            gte_200 : "GT 200",
+            lt_225  : "LT 225",
+            gte_225 : "GT 225",
+            lt_250  : "LT 250",
+            gte_250 : "GT 250",
+            lt_275  : "LT 275",
+            gte_275 : "GT 275",
+            lt_300  : "LT 300",
+            gte_300 : "GT 300",
+            }
+        default : all
 
 data    :
     &person_id person_id :
@@ -64,7 +317,7 @@ data    :
         class   : integer
     &year_end year_end :
         class   : integer
-    &team_id item_id :
+    &team_id team_id :
         class   : numeric
     &team_city team_city :
         class   : character
@@ -72,15 +325,103 @@ data    :
         class   : character
     &team_abbr team_abbr :
         class   : character
-    &played played :
+    &has_played has_played :
         class   : logical
         mapping : {
             'Y' : TRUE,    # played
             'N' : FALSE    # never played
             }
-
+    &player_name player_name :
+        class : character
+    &age age :
+        class   : integer
+    &games games :
+        class   : integer
+    &win win :
+        class   : integer
+    &loss loss :
+        class   : integer
+    &mins mins :
+        class   : numeric
+    &fgm fgm :
+        class   : numeric
+    &fga fga :
+        class   : numeric
+    &fg3m fg3m :
+        class   : numeric
+    &fg3a fg3a :
+        class   : numeric
+    &ftm ftm :
+        class   : numeric
+    &fta fta :
+        class   : numeric
+    &o_boards offensive_boards :
+        class   : numeric
+    &d_boards defensive_boards :
+        class   : numeric
+    &boards boards :
+        class   : numeric
+    &assists assists :
+        class   : numeric
+    &turnovers turnovers :
+        class   : numeric
+    &steals steals :
+        class   : numeric
+    &blocks blocks :
+        class   : numeric
+    &block_against block_against :
+        class   : numeric
+    &fouls fouls :
+        class   : numeric
+    &fouls_drawn fouls_drawn :
+        class   : numeric
+    &points points :
+        class   : numeric
+    &plus_minus plus_minus :
+        class   : numeric
+    &double_double double_double :
+        class   : numeric
+    &triple_double triple_double :
+        class   : numeric
+    &o_rating offensive_rating :
+        class   : numeric
+    &d_rating defensive_rating :
+        class   : numeric
+    &net_rating net_rating :
+        class   : numeric
+    &assist_percent assist_percent :
+        class   : numeric
+    &assist_turnover assist_turnover :
+        class   : numeric
+    &assist_rate assist_rate :
+        class   : numeric
+    &o_board_percent offensive_boards_percent :
+        class   : numeric
+    &d_board_percent defensive_boards_percent :
+        class   : numeric
+    &board_percent board_percent :
+        class   : numeric
+    &turnover_rate turnover_rate :
+        class   : numeric
+    &efg_percent EFG_percent :
+        class   : numeric
+    &ts_percent true_shooting_percent :
+        class   : numeric
+    &usage_percent usage_percent :
+        class   : numeric
+    &pace pace :
+        class   : numeric
+    &pie PIE :
+        class   : numeric
+    &fgmt_percent fgmt_percent :
+        class   : numeric
+    &fgat_percent fgat_percent :
+        class   : numeric
+    &fgt_percent fgt_percent :
+        class   : numeric
+                
 endpoints :
-    PlayerCommon :
+    player_registry :
         api.name     : "commonallplayers"
         api.path     : "stats"
         api.referrer : "http://stats.nba.com/players"
@@ -100,5 +441,115 @@ endpoints :
                 *team_city    : "team_city",
                 *team_name    : "team_name",
                 *team_abbr    : "team_abbreviation",
-                *played       : "games_played_flag",
+                *has_played   : "games_played_flag",
+                }
+    per_player_base :
+        api.name     : "leaguedashplayerstats"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : &ldps_input {
+            *college             : "College",
+            *conference          : "Conference",
+            *country             : "Country",
+            *date_from           : "DateFrom",
+            *date_to             : "DateTo",
+            *division            : "Division",
+            *draft_pick          : "DraftPick",
+            *draft_year          : "DraftYear",
+            *game_scope          : "GameScope",
+            *game_segment        : "GameSegment",
+            *height_segment      : "Height",
+            *last_n              : "LastNGames",
+            *league              : "LeagueID",
+            *location            : "Location",
+            *measurement         : "MeasureType",
+            *month               : "Month",
+            *opponent_team       : "OpponentTeamID",
+            *win_loss            : "Outcome",
+            *playoff_round       : "PORound",
+            *pace_adjust         : "PaceAdjust",
+            *per                 : "PerMode",
+            *period              : "Period",
+            *experience          : "PlayerExperience",
+            *position            : "PlayerPosition",
+            *plus_minus          : "PlusMinus",
+            *rank                : "Rank",
+            *season              : "Season",
+            *season_segment      : "SeasonSegment",
+            *season_type         : "SeasonType",
+            *shot_clock          : "ShotClockRange",
+            *starting_status     : "StarterBench",
+            *team_id             : "TeamID",
+            *opponent_conference : "VsConference",
+            *opponent_division   : "VsDivision",
+            *weight_segment      : "Weight"
+            }
+        api.results :
+            LeagueDashPlayerStats : {
+                *person_id      : "player_id",
+                *player_name    : "player_name",
+                *team_id        : "team_id",
+                *team_abbr      : "team_abbreviation",
+                *age            : "age",
+                *games          : "gp",
+                *win            : "w",
+                *loss           : "l",
+                *mins           : "min",
+                *fgm            : "fgm",
+                *fga            : "fga",
+                *fg3m           : "fg3m",
+                *fg3a           : "fg3a",
+                *ftm            : "ftm",
+                *fta            : "fta",
+                *o_boards       : "oreb",
+                *d_boards       : "dreb",
+                *boards         : "reb",
+                *assists        : "ast",
+                *turnovers      : "tov",
+                *steals         : "stl",
+                *blocks         : "blk",
+                *block_against  : "blka",
+                *fouls          : "pf",
+                *fouls_drawn    : "pfd",
+                *points         : "pts",
+                *plus_minus     : "plus_minus",
+                *double_double  : "dd2",
+                *triple_double  : "td3"
+                }
+    per_player_advanced :
+        api.name     : "leaguedashplayerstats"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldps_input
+        api.results :
+            LeagueDashPlayerStats : {
+                *person_id       : "player_id",
+                *player_name     : "player_name",
+                *team_id         : "team_id",
+                *team_abbr       : "team_abbreviation",
+                *age             : "age",
+                *games           : "gp",
+                *win             : "w",
+                *loss            : "l",
+                *mins            : "min",
+                *o_rating        : "off_rating",
+                *d_rating        : "def_rating",
+                *net_rating      : "net_rating",
+                *assist_percent  : "ast_pct",
+                *assist_turnover : "ast_to",
+                *assist_rate     : "ast_ratio",
+                *o_board_percent : "oreb_pct",
+                *d_board_percent : "dreb_pct",
+                *board_percent   : "reb_pct",
+                *turnover_rate   : "tm_toc_pct",
+                *efg_percent     : "efg_pct",
+                *ts_percent      : "ts_pct",
+                *usage_percent   : "usg_pct",
+                *pace            : "pace",
+                *pie             : "pie",
+                #*fgm            : "fgm",
+                #*fga            : "fga",
+                *fgmt_percent    : "fgm_pct",    # The percentage of team field goals made by a player
+                *fgat_percent    : "fga_pct",    # The percentage of team field goals attempted by a player
+                *fgt_percent     : "fg_pct"      # fg percent of team on court
                 }

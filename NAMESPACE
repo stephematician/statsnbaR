@@ -2,6 +2,7 @@
 
 export(api_scrape)
 export(get_players)
+export(per_player_filters)
 importFrom(httr,GET)
 importFrom(httr,accept)
 importFrom(httr,add_headers)

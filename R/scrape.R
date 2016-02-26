@@ -126,24 +126,25 @@ api_scrape <- function(endpoint, filters) {
 
     # Check that all filters are valid for this endpoint, and that all the
     # filters required for the endpoint are specified.
-    if (!identical(names(filters) %in% names(ADL.endpoint$api.filters))) {
+    if (!all(names(filters) %in% names(ADL.endpoint$api.filters)) ||
+        length(filters) != length(ADL.endpoint$api.filters)) {
         invalid_filters <- !(names(filters) %in%
                              names(ADL.endpoint$api.filters))
         missing_filters <- !(names(ADL.endpoint$api.filters) %in%
                              names(filters))
-        MFmsg <- paste('missing filters (',
-                       paste(names(ADL.endpoint$api.filters)[missing_filters],
-                             collapse=', '),
-                       ') for stats.nba.com endpoint',
-                       ADL.endpoint$api.name, '\n')        
-        IFmsg <- paste('invalid filters (',
-                       paste(names(filters)[invalid_filters],
-                             collapse=', '),
-                       ') specified for stats.nba.com endpoint',
-                       ADL.endpoint$api.name, '\n')        
+        MFmsg <- paste0('missing filters (',
+                        paste(names(ADL.endpoint$api.filters)[missing_filters],
+                              collapse=', '),
+                        ') for stats.nba.com endpoint ',
+                        ADL.endpoint$api.name, '\n')
+        IFmsg <- paste0('invalid filters (',
+                        paste(names(filters)[invalid_filters],
+                              collapse=', '),
+                        ') specified for stats.nba.com endpoint ',
+                        ADL.endpoint$api.name, '\n')
         stop(paste('[statsnbaR scrape]', MFmsg, IFmsg))
     }
-    
+
     # Get the stats.nba.com form of the filters
     ADL.filters <- map_filters(filters, ADL.endpoint)
 
@@ -156,11 +157,11 @@ api_scrape <- function(endpoint, filters) {
                         add_headers(Referer=ADL.endpoint$api.referrer))
 
     json_data <- content(api_response)
-    
+
     if (!valid_results(json_data))
         stop(paste('[stats_nba scrape] invalid result returned by',
                    'stats.nba.com endpoint'))
-    
+
     # flatten the data into a nice data.frame
     untyped_data <- lapply(json_data$resultSets,
                            flatten_json_rowSet)

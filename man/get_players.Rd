@@ -13,6 +13,13 @@ get_players(league, season)
 season)}
 }
 \description{
-Retrieves the player data from stats.nba.com
+Retrieves current and historical player data from stats.nba.com
+}
+\examples{
+\dontrun{
+    df <- get_players(league=2015)
+    tail(df)
+}
+
 }
 

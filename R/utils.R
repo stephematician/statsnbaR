@@ -16,32 +16,45 @@
 #' The source code can be found at
 #' \url{http://www.github.com/stephematicina/statsnbaR/tree/master/R/utils.R}
 type_converters = list(
+    'api_date'=function(x) {
+                   if (!is.null(x)) {
+                       format(x, format='%d/%m/%Y')
+                   } else NULL
+               },
+    'api_season'=function(x) {
+                     if(is.numeric(x) &&
+                        (x %% 1) == 0) {
+                        year_start <- as.character(x)
+                        year_end <- as.character(x+1)
+                        paste0(year_start, '-', substr(year_end, 3, 4))
+                     } else NULL
+                 },
+    'character'=as.character,
     'date'=function(x) {
                if (!is.null(attr(x, 'tzone'))) {
                  return(as.Date(x, tz=attr(x, 'tzone')))
                }
                as.Date(x)
              },
-    'last_name'=function(x) {
-                    sub('^(.*),[\\s]*(.*)$', '\\1', x, perl=TRUE)
-                 },
+    'double'=as.double,
+    'factor'=factor,
     'first_name'=function(x) {
                     sub('^(.*),[\\s]*(.*)$', '\\2', x, perl=TRUE)
                  },
-    'posix_date'=as.POSIXct,
-    'integer'=as.integer,
     'hexmode'=function(x) {
                   if (!length(x)) {
                       return(character(0))
                   }
                   as.hexmode(x)
               },
+    'integer'=as.integer,
+    'last_name'=function(x) {
+                    sub('^(.*),[\\s]*(.*)$', '\\1', x, perl=TRUE)
+                 },
     'logical'=as.logical,
     'numeric'=as.numeric,
-    'double'=as.double,
-    'character'=as.character,
-    'factor'=factor,
-    'ordered'=ordered
+    'ordered'=ordered,
+    'posix_date'=as.POSIXct
 )
 
 #' Validate key-value pairs as being statsnbaR-recognisable
@@ -52,19 +65,25 @@ type_converters = list(
 #' @return Logical result of tests
 #' @keywords internal
 valid_filters <- function(filters) {
-    is.list(filters)
+    
+    is.list(filters) &&
     all(names(filters) %in% names(statsnbaR.ADL.filters)) &&
     all(sapply(filters,
-         function(f) {
-            (length(f)==1) && (is.numeric(f) ||
-                               is.character(f) ||
-                               is.logical(f))
-         })) &&
+               function(f) {
+                   ((length(f)==1) && (is.numeric(f) ||
+                                       is.character(f) ||
+                                       is.logical(f))) ||
+                   is.null(f)
+                })) &&
     all(sapply(1:length(filters),
-        function(j) {
-            name <- names(filters)[j]
-            filters[[j]] %in% names(statsnbaR.ADL.filters[[name]]$mapping)
-        }))
+               function(j) {
+                   name <- names(filters)[j]
+                   mapping <- statsnbaR.ADL.filters[[name]]$mapping
+
+                   ifelse(!is.null(mapping),
+                          filters[[j]] %in% names(mapping),
+                          TRUE)
+               }))
 }
 
 #' Translate key-value pairs to the stats.nba.com API key-value pairs
@@ -146,22 +165,23 @@ map_filters <- function(filters,
 #' @keywords internal
 map_filter_values <- function(filters) {
 
-    mappings <- lapply(names(filters),
-                       function(name) 
-                           statsnbaR.ADL.filters[[name]]$mapping)
-
     # Only map values for which a mapping exists.
-    mapped <- lapply(1:length(mappings),
+    mapped <- lapply(names(filters),
                      function(j) {
-                         if (!is.null(mappings[[j]])) {
-                             mappings[[j]][[as.character(filters[[j]])]]
-                         } else {
-                             filters[[j]]
-                         }
+                         mapping <- statsnbaR.ADL.filters[[j]]$mapping
+                         filter_class <- statsnbaR.ADL.filters[[j]]$class
+
+                         tc <- type_converters[[filter_class]]
+                         nv <- if (!is.null(mapping)) {
+                                      mapping[[as.character(filters[[j]])]]
+                               } else filters[[j]]
+                         if (!is.null(nv)) {
+                            tc(nv)
+                         } else ''
                      })
     names(mapped) <- names(filters)
-    print(mapped)
-    return(mapped)  
+
+    return(mapped)
 }
 
 #' Check output of API matches basic format
@@ -174,8 +194,8 @@ map_filter_values <- function(filters) {
 #' @keywords internal
 valid_results <- function(api_result) {
     is.list(api_result) &&
-    length(names(api_result)) == 3 &&
-    names(api_result) %in% c('parameters', 'resource', 'resultSets')
+    (length(names(api_result)) == 3) &&
+    all(c('parameters', 'resource', 'resultSets') %in% names(api_result)) &&
     all(sapply(api_result$resultSets,
         function(f) {
             length(names(f)) == 3 &&
@@ -210,7 +230,8 @@ flatten_json_rowSet <- function(json_result) {
                     b[sapply(b, is.null)] <- NA
                     return(b)
                 })
-    a <- data.frame(matrix(unlist(a), nrow=length(a), byrow=TRUE))
+    a <- data.frame(matrix(unlist(a), nrow=length(a), byrow=TRUE),
+                    stringsAsFactors=FALSE)
     names(a) <- tolower(unlist(json_result$headers))
 
     return(a)
@@ -252,7 +273,8 @@ flatten_json_rowSet <- function(json_result) {
 map_results <- function(df,
                         api.mapping) {
 
-    ADL_df <- data.frame(df[, unlist(api.mapping)])
+    ADL_df <- data.frame(df[, unlist(api.mapping)],
+                         stringsAsFactors=FALSE)
 
     names(ADL_df) <- names(api.mapping)
 
@@ -292,16 +314,17 @@ map_result_values <- function(df) {
 
     mapped_df <- do.call(cbind,
             lapply(names(df),
-                   function(k) {
-                       mapping <- statsnbaR.ADL.data[[k]]$mapping
-                       tc <- type_converters[[statsnbaR.ADL.data[[k]]$class]]
+                   function(j) {
+                       mapping <- statsnbaR.ADL.data[[j]]$mapping
+                       tc <- type_converters[[statsnbaR.ADL.data[[j]]$class]]
 
-                       nc <- df[,k]
+                       nc <- df[,j]
                        if (!is.null(mapping))
                            nc <- mapping[as.character(nc)]
                        if (!is.null(tc))
                            nc <- tc(nc)
-                       return(data.frame(nc))
+                       return(data.frame(nc,
+                                         stringsAsFactors=FALSE))
                    })
             )
 
