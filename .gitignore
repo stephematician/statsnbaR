@@ -5,4 +5,6 @@ vignettes/*.pdf
 # example code
 *-Ex.R
 
+# produced manual
+inst/man/*
 

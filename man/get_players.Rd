@@ -7,10 +7,10 @@
 get_players(league, season)
 }
 \arguments{
-\item{league}{Character value of league (e.g. 'NBA')}
+\item{league}{A character value of league e.g. 'nba', 'd-league'.}
 
-\item{season}{Numeric value of the base season (e.g. 2015 for the 2015-2016
-season)}
+\item{season}{Numeric value of the base season, e.g. 2015 for the 2015-2016
+season and so on.}
 }
 \value{
 A data.frame with names of current and historical players and the
@@ -22,11 +22,16 @@ A data.frame with names of current and historical players and the
      \item{roster_status}{logical - currently rostered in season selected}
      \item{year_start}{integer - year player entered NBA}
      \item{year_end}{integer - year player exited NBA}
-     \item{team_id}{integer - ID of the player's current team (if roster_status is true)}
-     \item{team_city}{character - city of current team (if roster_status is true)}
-     \item{team_name}{character - name of current team (if roster_status is true)}
-     \item{team_abbr}{character - abbrev. name of current team (if roster_status is true)}
-     \item{has_played}{logical - did the player record at least one game in NBA}
+     \item{team_id}{integer - ID of the player's current team (if 
+       roster_status is true)}
+     \item{team_city}{character - city of current team (if roster_status
+       is true)}
+     \item{team_name}{character - name of current team (if roster_status is
+       true)}
+     \item{team_abbr}{character - abbrev. name of current team (if
+       roster_status is true)}
+     \item{has_played}{logical - did the player record at least one game in
+       NBA}
   }
 }
 \description{
@@ -34,7 +39,7 @@ Retrieves current and historical player data from stats.nba.com
 }
 \examples{
 \dontrun{
-    df <- get_players(league=2015)
+    df <- get_players(season=2014, league='d-league')
     tail(df)
 }
 

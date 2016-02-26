@@ -13,10 +13,10 @@ filters  :
     &league league :
         class   : character
         mapping : {
-            NBA      : "00",    # NBA
-            D-league : "20"     # D-League
+            nba      : "00",    # NBA
+            d-league : "20"     # D-League
             }
-        default : NBA
+        default : nba
     &only_current only_current :
         class   : numeric
         mapping : {
