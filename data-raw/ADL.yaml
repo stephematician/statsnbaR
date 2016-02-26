@@ -174,7 +174,7 @@ filters  :
     &per per : 
         class : character
         mapping : {
-            total            : "Totals",
+            total           : "Totals",
             game            : "PerGame",
             possessions_100 : "Per100Possessions",
             plays_100       : "Per100Plays",
@@ -299,6 +299,29 @@ filters  :
             gte_300 : "GT 300",
             }
         default : all
+    &clutch_time clutch_time :
+        class   : character
+        mapping : {
+            300 : "Last 5 Minutes",
+            240 : "Last 4 Minutes",
+            180 : "Last 3 Minutes",
+            120 : "Last 2 Minutes",
+            60  : "Last 1 Minute",
+            30  : "Last 30 Seconds",
+            10  : "Last 10 Seconds"
+            }
+        default : 300
+    &point_diff point_diff :
+        class   : integer
+        default : 5
+    &lead lead :
+        class   : character
+        mapping : {
+            any    :  "Ahead or Behind",
+            behind : "Behind or Tied",
+            ahead  : "Ahead or Tied"
+            }
+        default : any
 
 data    :
     &person_id person_id :
@@ -413,13 +436,85 @@ data    :
         class   : numeric
     &pie PIE :
         class   : numeric
-    &fgmt_percent fgmt_percent :
+    &points_off_TO points_off_TO :
         class   : numeric
-    &fgat_percent fgat_percent :
+    &points_sec_chance points_sec_chance :
         class   : numeric
-    &fgt_percent fgt_percent :
+    &points_fast_break points_fast_break :
         class   : numeric
-                
+    &points_in_paint points_in_paint :
+        class   : numeric
+    &opp_points_off_TO opp_points_off_TO :
+        class   : numeric
+    &opp_points_sec_chance opp_points_sec_chance :
+        class   : numeric
+    &opp_points_fast_break opp_points_fast_break :
+        class   : numeric
+    &opp_points_in_paint  opp_points_in_paint :
+        class   : numeric 
+    &fg2a_percent fg2a_percent :
+        class   : numeric 
+    &fg3a_percent fg3a_percent :
+        class   : numeric 
+    &pts2_percent pts2_percent :
+        class   : numeric 
+    &pts2_midrange_percent pts2_midrange_percent :
+        class   : numeric 
+    &pts3_percent pts3_percent :
+        class   : numeric 
+    &pts_fastbreak_percent pts_fastbreak_percent :
+        class   : numeric 
+    &pts_freethrow_percent pts_freethrow_percent :
+        class   : numeric 
+    &pts_off_TO_percent pts_off_TO_percent :
+        class   : numeric 
+    &pts_paint_percent pts_paint_percent :
+        class   : numeric 
+    &pts2m_assist_percent pts2m_assist_percent :
+        class   : numeric 
+    &pts3m_assist_percent pts3m_assist_percent :
+        class   : numeric 
+    &fgm_assist_percent fgm_assist_percent :
+        class   : numeric
+    &fgm_usage fgm_usage :
+        class   : numeric
+    &fga_usage fga_usage :
+        class   : numeric
+    &fg3m_usage fg3m_usage :
+        class   : numeric
+    &fg3a_usage fg3a_usage :
+        class   : numeric
+    &ftm_usage ftm_usage :
+        class   : numeric
+    &fta_usage fta_usage :
+        class   : numeric
+    &o_board_usage o_board_usage :
+        class   : numeric
+    &d_board_usage d_board_usage :
+        class   : numeric
+    &board_usage board_usage :
+        class   : numeric
+    &assist_usage assist_usage :
+        class   : numeric
+    &TO_usage TO_usage :
+        class   : numeric
+    &steal_usage steal_usage :
+        class   : numeric
+    &block_usage block_usage :
+        class   : numeric
+    &block_against_usage block_against_usage :
+        class   : numeric
+    &fouls_usage fouls_usage :
+        class   : numeric
+    &fouls_drawn_usage fouls_drawn_usage :
+        class   : numeric
+    &points_usage points_usage :
+        class   : numeric
+
+# helpful search + replace regex
+# ([ ]*)\*([A-Za-z0-9_]+)[ ]+:.+
+# \1&\2 \2 :\n        class   : numeric
+              
 endpoints :
     player_registry :
         api.name     : "commonallplayers"
@@ -485,7 +580,7 @@ endpoints :
             *weight_segment      : "Weight"
             }
         api.results :
-            LeagueDashPlayerStats : {
+            LeagueDashPlayerStats : &pp_base_results {
                 *person_id      : "player_id",
                 *player_name    : "player_name",
                 *team_id        : "team_id",
@@ -521,8 +616,8 @@ endpoints :
         api.path     : "stats"
         api.referrer : "http://stats.nba.com/league/player/"
         api.filters  : *ldps_input
-        api.results :
-            LeagueDashPlayerStats : {
+        api.results  :
+            LeagueDashPlayerStats : &pp_advanced_results {
                 *person_id       : "player_id",
                 *player_name     : "player_name",
                 *team_id         : "team_id",
@@ -541,15 +636,177 @@ endpoints :
                 *o_board_percent : "oreb_pct",
                 *d_board_percent : "dreb_pct",
                 *board_percent   : "reb_pct",
-                *turnover_rate   : "tm_toc_pct",
+                *turnover_rate   : "tm_tov_pct",
                 *efg_percent     : "efg_pct",
                 *ts_percent      : "ts_pct",
                 *usage_percent   : "usg_pct",
                 *pace            : "pace",
                 *pie             : "pie",
-                #*fgm            : "fgm",
-                #*fga            : "fga",
-                *fgmt_percent    : "fgm_pct",    # The percentage of team field goals made by a player
-                *fgat_percent    : "fga_pct",    # The percentage of team field goals attempted by a player
-                *fgt_percent     : "fg_pct"      # fg percent of team on court
                 }
+    per_player_miscellaneous :
+        api.name     : "leaguedashplayerstats"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldps_input
+        api.results  :
+            LeagueDashPlayerStats : &pp_misc_results {
+                *person_id             : "player_id",
+                *player_name           : "player_name",
+                *team_id               : "team_id",
+                *team_abbr             : "team_abbreviation",
+                *age                   : "age",
+                *games                 : "gp",
+                *win                   : "w",
+                *loss                  : "l",
+                *mins                  : "min",
+                *points_off_TO         : "pts_off_tov",
+                *points_sec_chance     : "pts_2nd_chance",
+                *points_fast_break     : "pts_fb",
+                *points_in_paint       : "pts_paint",
+                *opp_points_off_TO     : "opp_pts_off_tov",
+                *opp_points_sec_chance : "opp_pts_2nd_chance",
+                *opp_points_fast_break : "opp_pts_fb",
+                *opp_points_in_paint   : "opp_pts_paint",
+                *blocks                : "blk",
+                *block_against         : "blka",
+                *fouls                 : "pf",
+                *fouls_drawn           : "pfd"
+                }
+    per_player_scoring :
+        api.name     : "leaguedashplayerstats"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldps_input
+        api.results  :
+            LeagueDashPlayerStats : &pp_scoring_results {
+                *person_id             : "player_id",
+                *player_name           : "player_name",
+                *team_id               : "team_id",
+                *team_abbr             : "team_abbreviation",
+                *age                   : "age",
+                *games                 : "gp",
+                *win                   : "w",
+                *loss                  : "l",
+                *mins                  : "min",
+                *fg2a_percent          : "pct_fga_2pt",
+                *fg3a_percent          : "pct_fga_3pt",
+                *pts2_percent          : "pct_pts_2pt",
+                *pts2_midrange_percent : "pct_pts_2pt_mr",
+                *pts3_percent          : "pct_pts_3pt",
+                *pts_fastbreak_percent : "pct_pts_fb",
+                *pts_freethrow_percent : "pct_pts_ft",
+                *pts_off_TO_percent    : "pct_pts_off_tov",
+                *pts_paint_percent     : "pct_pts_paint",
+                *pts2m_assist_percent  : "pct_ast_2pm",
+                *pts3m_assist_percent  : "pct_ast_3pm",
+                *fgm_assist_percent    : "pct_ast_fgm"
+                }
+    per_player_usage :
+        api.name     : "leaguedashplayerstats"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldps_input
+        api.results  :
+            LeagueDashPlayerStats : {
+                *person_id           : "player_id",
+                *player_name         : "player_name",
+                *team_id             : "team_id",
+                *team_abbr           : "team_abbreviation",
+                *age                 : "age",
+                *games               : "gp",
+                *win                 : "w",
+                *loss                : "l",
+                *mins                : "min",
+                *usage_percent       : "usg_pct",
+                *fgm_usage           : "pct_fgm",
+                *fga_usage           : "pct_fga",
+                *fg3m_usage          : "pct_fg3m",
+                *fg3a_usage          : "pct_fg3a",
+                *ftm_usage           : "pct_ftm",
+                *fta_usage           : "pct_fta",
+                *o_board_usage       : "pct_oreb",
+                *d_board_usage       : "pct_dreb",
+                *board_usage         : "pct_reb",
+                *assist_usage        : "pct_ast",
+                *TO_usage            : "pct_tov",
+                *steal_usage         : "pct_stl",
+                *block_usage         : "pct_blk",
+                *block_against_usage : "pct_blka",
+                *fouls_usage         : "pct_pf",
+                *fouls_drawn_usage   : "pct_pfd",
+                *points_usage        : "pct_pts"
+                }
+    per_player_base_clutch :
+        api.name     : "leaguedashplayerclutch"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : &ldpc_input {
+            *clutch_time         : "ClutchTime",
+            *college             : "College",
+            *conference          : "Conference",
+            *country             : "Country",
+            *date_from           : "DateFrom",
+            *date_to             : "DateTo",
+            *division            : "Division",
+            *draft_pick          : "DraftPick",
+            *draft_year          : "DraftYear",
+            *game_scope          : "GameScope",
+            *game_segment        : "GameSegment",
+            *height_segment      : "Height",
+            *last_n              : "LastNGames",
+            *lead                : "AheadBehind",
+            *league              : "LeagueID",
+            *location            : "Location",
+            *measurement         : "MeasureType",
+            *month               : "Month",
+            *opponent_team       : "OpponentTeamID",
+            *win_loss            : "Outcome",
+            *playoff_round       : "PORound",
+            *pace_adjust         : "PaceAdjust",
+            *per                 : "PerMode",
+            *period              : "Period",
+            *point_diff          : "PointDiff",
+            *experience          : "PlayerExperience",
+            *position            : "PlayerPosition",
+            *plus_minus          : "PlusMinus",
+            *rank                : "Rank",
+            *season              : "Season",
+            *season_segment      : "SeasonSegment",
+            *season_type         : "SeasonType",
+            *shot_clock          : "ShotClockRange",
+            *starting_status     : "StarterBench",
+            *team_id             : "TeamID",
+            *opponent_conference : "VsConference",
+            *opponent_division   : "VsDivision",
+            *weight_segment      : "Weight"
+            }
+        api.results :
+            LeagueDashPlayerClutch : *pp_base_results
+    per_player_advanced_clutch :
+        api.name     : "leaguedashplayerclutch"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldpc_input
+        api.results :
+            LeagueDashPlayerClutch : *pp_advanced_results
+    per_player_miscellaneous_clutch :
+        api.name     : "leaguedashplayerclutch"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldpc_input
+        api.results :
+            LeagueDashPlayerClutch : *pp_misc_results
+    per_player_scoring_clutch :
+        api.name     : "leaguedashplayerclutch"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldpc_input
+        api.results :
+            LeagueDashPlayerClutch : *pp_scoring_results
+    per_player_usage_clutch :
+        api.name     : "leaguedashplayerclutch"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : *ldpc_input
+        api.results :
+            LeagueDashPlayerClutch : *pp_usage_results

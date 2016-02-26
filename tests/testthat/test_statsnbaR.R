@@ -14,12 +14,15 @@ test_that(
 })
 
 test_that(
+'per player filter functions are available',
+{
+    expect_true(exists('filter_per_player'))
+    expect_true(exists('filter_per_player_clutch'))
+})
+
+test_that(
 'per player query functions are available',
 {
-    expect_true(exists('per_player_filters'))
-    expect_true(exists('per_player_base'))
-    expect_true(exists('per_player_advanced'))
-    expect_true(exists('per_player_scoring'))
-    expect_true(exists('per_player_usage'))
+    expect_true(exists('per_player_data'))
 })
 

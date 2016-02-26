@@ -28,7 +28,7 @@ valid_data <- sapply(statsnbaR.ADL.data,
 if (!all(valid_data))
     stop(paste0('invalid classes for data items in ADL.yaml; ',
                 paste0('\'',
-                       names(statsnbaR.ADL.data)[!valid_classes],
+                       names(statsnbaR.ADL.data)[!valid_data],
                        '\'',
                        collapse=', '),
                 '.'))
@@ -68,14 +68,76 @@ if (!all(valid_classes))
                        collapse=', '),
                 '.'))
 
-# to-do
 # check that every endpoint has a api.name, api.path, api.filters, api.results
+valid_endpoints <- sapply(statsnbaR.ADL.endpoints,
+                          function(x) c('api.name',
+                                        'api.path',
+                                        'api.filters',
+                                        'api.results') %in% names(x))
+if (!all(valid_endpoints))
+    stop(paste0('missing api.filters/name/path/results for endpoints',
+                'in ADL.yaml; ',
+                paste0('\'',
+                       names(statsnbaR.ADL.endpoints)[!valid_endpoints],
+                       '\'',
+                       collapse=', '),
+                '.'))
 
 # check that every endpoint specifices valid data in the result
+# this should be true provided results are specified by tags!
+valid_ep_results <- sapply(statsnbaR.ADL.endpoints,
+                           function(x) {
+                               results <- do.call(c,
+                                                  lapply(x$api.results,
+                                                         names))
+                               all(results %in%
+                                   names(statsnbaR.ADL.data))
+                           })
+
+if (!all(valid_ep_results)) {
+    stop(paste0('invalid result data for endpoints in ADL.yaml; ',
+                paste0(lapply(which(!valid_ep_results),
+                              function(j) {
+                                  x <- statsnbaR.ADL.endpoints[[j]]
+                                  name <- names(statsnbaR.ADL.endpoints)[j]
+                                  results <- do.call(c,
+                                                     lapply(x$api.results,
+                                                            names))
+                                  z <- !(results %in% names(statsnbaR.ADL.data))
+                                  paste0('\'', name,
+                                         '$',  results[z],
+                                         '\'', collapse=', ')
+                              }), 
+                      collapse=', '),
+                '.'))
+}
 
 # and every endpoint specifies valid filters in the filters
+# this should be true provided results are specified by tags!
+valid_ep_filters <- sapply(statsnbaR.ADL.endpoints,
+                           function(x) {
+                               filters <- names(x$api.filters)
+                               all(filters %in%
+                                   names(statsnbaR.ADL.filters))
+                           })
 
-                
+if (!all(valid_ep_filters)) {
+    stop(paste0('invalid filters for endpoints in ADL.yaml; ',
+                paste0(lapply(which(!valid_ep_filters),
+                              function(j) {
+                                  x <- statsnbaR.ADL.endpoints[[j]]$api.filters
+                                  name <- names(statsnbaR.ADL.endpoints)[j]
+                                  filters <- names(x)
+                                  z <- !(filters %in%
+                                         names(statsnbaR.ADL.filters))
+                                  paste0('\'', name,
+                                         '$',  filters[z],
+                                         '\'', collapse=', ')
+                              }), 
+                      collapse=', '),
+                '.'))
+}
+
 use_data(statsnbaR.ADL.endpoints,
          statsnbaR.ADL.filters,
          statsnbaR.ADL.data,

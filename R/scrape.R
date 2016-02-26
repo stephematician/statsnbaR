@@ -119,7 +119,7 @@ api_scrape <- function(endpoint, filters) {
     ADL.endpoint <- statsnbaR.ADL.endpoints[[endpoint]]
 
     if (!valid_filters(filters))
-        stop(paste('[statsnbaR scrape] filters must be  valid key-pair',
+        stop(paste('[statsnbaR scrape] filters must be a valid key-pair',
                    'list recognised by statsnbaR'))
         
         

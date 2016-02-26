@@ -12,6 +12,23 @@ get_players(league, season)
 \item{season}{Numeric value of the base season (e.g. 2015 for the 2015-2016
 season)}
 }
+\value{
+A data.frame with names of current and historical players and the
+  fields
+  \describe{
+     \item{person_id}{integer - ID of the player}
+     \item{first_name}{character - the player's first name}
+     \item{last_name}{character - the player's last name}
+     \item{roster_status}{logical - currently rostered in season selected}
+     \item{year_start}{integer - year player entered NBA}
+     \item{year_end}{integer - year player exited NBA}
+     \item{team_id}{integer - ID of the player's current team (if roster_status is true)}
+     \item{team_city}{character - city of current team (if roster_status is true)}
+     \item{team_name}{character - name of current team (if roster_status is true)}
+     \item{team_abbr}{character - abbrev. name of current team (if roster_status is true)}
+     \item{has_played}{logical - did the player record at least one game in NBA}
+  }
+}
 \description{
 Retrieves current and historical player data from stats.nba.com
 }
