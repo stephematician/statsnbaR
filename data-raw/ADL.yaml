@@ -7,12 +7,13 @@
 # Stephen Wade
 # 26/02/2016
 
-- &numeric { class : numeric }
-- &integer { class : integer }
-- &character { class : character }
-- &numeric_or_na { class : numeric_or_na }
-- &logical { class : logical }
----
+defs :
+    - &numeric { class : numeric }
+    - &integer { class : integer }
+    - &character { class : character }
+    - &numeric_or_na { class : numeric_or_na }
+    - &logical { class : logical }
+
 host : "http://stats.nba.com/"
 
 # These mappings are all specified (manually) using Chromium's developer
