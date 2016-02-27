@@ -20,6 +20,34 @@ statsnbaR.ADL.filters <- ADL_data$filters
 statsnbaR.ADL.data <- ADL_data$data
 statsnbaR.ADL.host <- ADL_data$host
 
+# Need to check for any bad anchors
+# _yaml.bad-anchor_
+any_bad_anchor <- function(x) {
+  if (is.list(x)) {
+      any(names(x)=='_yaml.bad-anchor_') ||
+      any(sapply(x, any_bad_anchor))
+  } else FALSE
+}
+
+if (any_bad_anchor(ADL_data)) {
+    paste_bad_anchors <- function(x_name, x) {
+        if (is.list(x)) {
+            ind <- sapply(x, any_bad_anchor)
+            if (any(ind)) {
+                paste(lapply(which(ind), 
+                             function(j)
+                                paste_bad_anchors(paste(x_name,
+                                                        names(x)[j],
+                                                        sep='$'),
+                                                  x[[j]])), collapse='\n')
+            } else x_name
+        }
+    }
+    stop(paste('bad anchors detected for:\n',
+               paste_bad_anchors('ADL_data', ADL_data)))
+}
+    
+
 source('./R/utils.R')
 # check that all data has a class
 
@@ -137,6 +165,9 @@ if (!all(valid_ep_filters)) {
                       collapse=', '),
                 '.'))
 }
+
+
+# any(names(x)) == '_yaml.bad-anchor_'
 
 use_data(statsnbaR.ADL.endpoints,
          statsnbaR.ADL.filters,

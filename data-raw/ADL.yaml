@@ -9,6 +9,8 @@
 
 host : "http://stats.nba.com/"
 
+# These mappings are all specified (manually) using Chromium's developer
+# tools to inspect the XHR parameter
 filters  :
     &league league :
         class   : character
@@ -322,7 +324,50 @@ filters  :
             ahead  : "Ahead or Tied"
             }
         default : any
+    &counter counter :
+        class   : integer
+        default : 1000
+    &descending desc :
+        class   : character
+        mapping : {
+            TRUE  : "DESC",
+            FALSE : "ASC"
+            }
+        default : TRUE
+    &player_or_team log_for :
+        class   : character
+        mapping : {
+            player : "P",
+            team   : "T"
+            }
+        default : player
+    &sorter sort_on :
+        class   : character
+        mapping : {
+            points    : "PTS",
+            fgm       : "FGM",
+            fga       : "FGA",
+            fg_pct    : "FG_PCT",
+            fg3m      : "FG3M",
+            fg3a      : "FG3A",
+            fg4_pct   : "FG3_PCT",
+            ftm       : "FTM",
+            fta       : "FTA",
+            ft_pct    : "FT_PCT",
+            oreb      : "OREB",
+            dreb      : "DREB",
+            reb       : "REB",
+            ast       : "AST",
+            stl       : "STL",
+            blk       : "BLK",
+            tov       : "TOV",
+            pf        : "PF",
+            plus_mins : "PLUS_MINUS"
+            }
+        default : points
 
+# These endpoints are all specified (manually) using Chromium's developer
+# tools to inspect the XHR 
 data    :
     &person_id person_id :
         class   : numeric
@@ -360,9 +405,9 @@ data    :
         class   : integer
     &games games :
         class   : integer
-    &win win :
+    &wins wins :
         class   : integer
-    &loss loss :
+    &losses losses :
         class   : integer
     &mins mins :
         class   : numeric
@@ -510,11 +555,42 @@ data    :
         class   : numeric
     &points_usage pts_usage :
         class   : numeric
-
-# helpful search + replace regex
+    &height height :
+        class   : numeric
+    &weight weight :
+        class   : numeric
+    &college college :
+        class   : character
+    &country country :
+        class   : character
+    &draft_year draft_year :
+        class   : numeric_or_na
+    &draft_round draft_round :
+        class   : numeric_or_na
+    &draft_number draft_number :
+        class   : numeric_or_na
+    &game_id game_id :
+        class   : numeric
+    &game_date game_date :
+        class   : date
+    &matchup matchup :
+        class   : character
+    &game_outcome win :
+        class   : logical
+        mapping : {
+            'W' : TRUE,
+            'L' : FALSE
+            }
+    &video video :
+        class   : logical
+    &game_season season :
+        class   : numeric
+# regex i'm using to help when i copy from endpoints to make new data types
 # ([ ]*)\*([A-Za-z0-9_]+)[ ]+:.+
 # \1&\2 \2 :\n        class   : numeric
-              
+
+# These endpoints are all specified (manually) using Chromium's developer
+# tools to inspect the XHR  
 endpoints :
     player_registry :
         api.name     : "commonallplayers"
@@ -587,8 +663,8 @@ endpoints :
                 *team_abbr      : "team_abbreviation",
                 *age            : "age",
                 *games          : "gp",
-                *win            : "w",
-                *loss           : "l",
+                *wins           : "w",
+                *losses         : "l",
                 *mins           : "min",
                 *fgm            : "fgm",
                 *fga            : "fga",
@@ -624,8 +700,8 @@ endpoints :
                 *team_abbr       : "team_abbreviation",
                 *age             : "age",
                 *games           : "gp",
-                *win             : "w",
-                *loss            : "l",
+                *wins            : "w",
+                *losses          : "l",
                 *mins            : "min",
                 *o_rating        : "off_rating",
                 *d_rating        : "def_rating",
@@ -656,8 +732,8 @@ endpoints :
                 *team_abbr             : "team_abbreviation",
                 *age                   : "age",
                 *games                 : "gp",
-                *win                   : "w",
-                *loss                  : "l",
+                *wins                  : "w",
+                *losses                : "l",
                 *mins                  : "min",
                 *points_off_TO         : "pts_off_tov",
                 *points_sec_chance     : "pts_2nd_chance",
@@ -685,8 +761,8 @@ endpoints :
                 *team_abbr             : "team_abbreviation",
                 *age                   : "age",
                 *games                 : "gp",
-                *win                   : "w",
-                *loss                  : "l",
+                *wins                  : "w",
+                *losses                : "l",
                 *mins                  : "min",
                 *fg2a_percent          : "pct_fga_2pt",
                 *fg3a_percent          : "pct_fga_3pt",
@@ -714,8 +790,8 @@ endpoints :
                 *team_abbr           : "team_abbreviation",
                 *age                 : "age",
                 *games               : "gp",
-                *win                 : "w",
-                *loss                : "l",
+                *wins                : "w",
+                *losses              : "l",
                 *mins                : "min",
                 *usage_percent       : "usg_pct",
                 *fgm_usage           : "pct_fgm",
@@ -810,3 +886,112 @@ endpoints :
         api.filters  : *ldpc_input
         api.results :
             LeagueDashPlayerClutch : *pp_usage_results
+    player_bio :
+        api.name     : "leaguedashplayerbiostats"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : {
+            *college             : "College",
+            *conference          : "Conference",
+            *country             : "Country",
+            *date_from           : "DateFrom",
+            *date_to             : "DateTo",
+            *division            : "Division",
+            *draft_pick          : "DraftPick",
+            *draft_year          : "DraftYear",
+            *game_scope          : "GameScope",
+            *game_segment        : "GameSegment",
+            *height_segment      : "Height",
+            *last_n              : "LastNGames",
+            *league              : "LeagueID",
+            *location            : "Location",
+            *month               : "Month",
+            *opponent_team       : "OpponentTeamID",
+            *win_loss            : "Outcome",
+            *playoff_round       : "PORound",
+            *per                 : "PerMode",
+            *period              : "Period",
+            *experience          : "PlayerExperience",
+            *position            : "PlayerPosition",
+            *season              : "Season",
+            *season_segment      : "SeasonSegment",
+            *season_type         : "SeasonType",
+            *shot_clock          : "ShotClockRange",
+            *starting_status     : "StarterBench",
+            *team_id             : "TeamID",
+            *opponent_conference : "VsConference",
+            *opponent_division   : "VsDivision",
+            *weight_segment      : "Weight"
+            }
+        api.results :
+            LeagueDashPlayerBioStats : {
+                *person_id       : "player_id",
+                *player_name     : "player_name",
+                *team_id         : "team_id",
+                *team_abbr       : "team_abbreviation",
+                *age             : "age",
+                *height          : "player_height_inches",
+                *weight          : "player_weight",
+                *college         : "college",
+                *country         : "country",
+                *draft_year      : "draft_year",
+                *draft_round     : "draft_round",
+                *draft_number    : "draft_number",
+                *games           : "gp",
+                *points          : "pts",
+                *boards          : "reb",
+                *assists         : "ast",
+                *net_rating      : "net_rating",
+                *o_board_percent : "oreb_pct",
+                *d_board_percent : "dreb_pct",
+                *usage_percent   : "usg_pct",
+                *ts_percent      : "ts_pct",
+                *assist_percent  : "ast_pct"
+            }
+    game_log :
+        api.name     : "leaguegamelog"
+        api.path     : "stats"
+        api.referrer : "http://stats.nba.com/league/player/"
+        api.filters  : {
+            *counter        : "Counter",
+            *descending     : "Direction",
+            *league         : "LeagueID",
+            *player_or_team : "PlayerOrTeam",
+            *season         : "Season",
+            *season_type    : "SeasonType",
+            *sorter         : "Sorter"
+            }
+        api.results :
+            LeagueGameLog : {
+                *game_season  : "season_id",
+                *person_id    : "player_id",
+                *player_name  : "player_name",
+                *team_abbr    : "team_abbreviation",
+                *team_name    : "team_name",
+                *game_id      : "game_id",
+                *game_date    : "game_date",
+                *matchup      : "matchup",
+                *game_outcome : "wl",
+                *mins         : "min",
+                *fgm          : "fgm",
+                *fga          : "fga",
+                *fg3m         : "fg3m",
+                *fg3a         : "fg3a",
+                *ftm          : "ftm",
+                *fta          : "fta",
+                *o_boards     : "oreb",
+                *d_boards     : "dreb",
+                *boards       : "reb",
+                *assists      : "ast",
+                *steals       : "stl",
+                *blocks       : "blk",
+                *turnovers    : "tov",
+                *fouls        : "pf",
+                *points       : "pts",
+                *plus_minus   : "plus_minus",
+                *video        : "video_available"            
+            }
+
+# regex i'm using to assist after copy and paste from chromium          
+#.*: "([A-Z0-9_]+)"
+#                *\L\1 : "\L\1"

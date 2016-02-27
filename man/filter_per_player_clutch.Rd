@@ -22,11 +22,11 @@ brackets:
 }
 \value{
 A list of key-value pairs for passing to the per-player data query
-  function \code{\link{per_player_data}} with argument \code{clutch=TRUE}.
+  function \code{\link{per_player_agg}} with argument \code{clutch=TRUE}.
 }
 \description{
 Creates a list of key-value pairs from the supplied arguments for use in
-\code{\link{per_player_data}} with argument \code{clutch=TRUE}; and inserts
+\code{\link{per_player_agg}} with argument \code{clutch=TRUE}; and inserts
 default values for any filters not specified in the call to the function.
 }
 \details{
@@ -36,11 +36,11 @@ with the addition of the filters to determine what \sQuote{clutch} time is.
 \examples{
 \dontrun{
   fppc <- filter_per_player_clutch(league='NBA', clutch_time=300)
-  ppd <- per_player_data(filters=fppc, clutch=TRUE)
+  ppd <- per_player_agg(filters=fppc, clutch=TRUE)
 }
 
 }
 \seealso{
-\code{\link{per_player_data}} \code{\link{filter_per_player}}
+\code{\link{per_player_agg}} \code{\link{filter_per_player}}
 }
 

@@ -2,6 +2,37 @@ library(statsnbaR)
 context('filter functions work')
 
 test_that(
+    'filter_bio constructor creates a non-empty list',
+    {
+        expect_is(filter_bio(), 'list')
+    })
+
+test_that(
+    'filter_bio constructor assigns default values',
+    {
+        default_filters <- filter_bio()
+        expect_true(length(default_filters) > 0)
+        expect_true('season' %in% names(default_filters))
+        expect_equal(default_filters$season,
+                     statsnbaR.ADL.filters$season$default)
+    })
+    
+test_that(
+    'filter_bio constructor checks for valid filter names',
+    {
+        expect_is(filter_bio(college=NULL),
+                  'list')
+        expect_equal(filter_bio(country='foo')$country,'foo')
+        expect_error(filter_bio(countyr=NULL),
+                     paste('invalid filters',
+                           '\\(countyr\\) specified for query to endpoint\\.'))
+        expect_error(filter_bio(country=NULL,
+                                countyr=NULL),
+                     paste('invalid filters',
+                           '\\(countyr\\) specified for query to endpoint\\.'))      
+    })
+
+test_that(
     'filter_per_player constructor creates a non-empty list',
     {
         expect_is(filter_per_player(), 'list')
@@ -24,23 +55,23 @@ test_that(
                   'list')
         expect_equal(filter_per_player(college='foo')$college,'foo')
         expect_error(filter_per_player(collage=NULL),
-                     paste('\\[statsnbaR filter_per_player\\] invalid filters',
-                           '\\(collage\\) specified for per player query\\.'))
+                     paste('invalid filters',
+                           '\\(collage\\) specified for query to endpoint\\.'))
         expect_error(filter_per_player(college=NULL,
                                        collage=NULL),
-                     paste('\\[statsnbaR filter_per_player\\] invalid filters',
-                           '\\(collage\\) specified for per player query\\.'))      
+                     paste('invalid filters',
+                           '\\(collage\\) specified for query to endpoint\\.'))      
     })
     
 test_that(
     'filter_per_player constructor fails if measurement or clutch is given',
     {
         expect_error(filter_per_player(measurement=NULL),
-                     paste('\\[statsnbaR filter_per_player_worker\\] cannot',
+                     paste('\\[statsnbaR filter_per_player\\] cannot',
                             'specify \'measurement\' as an argument to the',
                             'filter constructor'))
         expect_error(filter_per_player(clutch=NULL),
-                     paste('\\[statsnbaR filter_per_player_worker\\] cannot',
+                     paste('\\[statsnbaR filter_per_player\\] cannot',
                             'specify \'clutch\' as an argument to the filter',
                             'constructor'))   
     })
@@ -69,21 +100,10 @@ test_that(
                   'list')
         expect_equal(filter_per_player_clutch(point_diff='foo')$point_diff,
                      'foo')
-        expect_error(filter_per_player_clutch(collage=NULL),
-                     paste('\\[statsnbaR filter_per_player\\] invalid filters',
-                           '\\(collage\\) specified for per player query\\.'))
+        # said with new zealand accent
+        expect_error(filter_per_player_clutch(point_duff=NULL),
+                     paste('invalid filters',
+                           '\\(point_duff\\) specified for query to',
+                           'endpoint\\.'))
     })
     
-    
-test_that(
-    'filter_per_player_clutch constructor fails if measurement or clutch is given',
-    {
-        expect_error(filter_per_player_clutch(measurement=NULL),
-                     paste('\\[statsnbaR filter_per_player_worker\\] cannot',
-                            'specify \'measurement\' as an argument to the',
-                            'filter constructor'))
-        expect_error(filter_per_player_clutch(clutch=NULL),
-                     paste('\\[statsnbaR filter_per_player_worker\\] cannot',
-                            'specify \'clutch\' as an argument to the filter',
-                            'constructor'))
-    })

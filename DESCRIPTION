@@ -19,8 +19,10 @@ Suggests:
     testthat
 Collate:
     'statsnbaR-package.R'
-    'utils.R'
+    'filter_worker.R'
     'filter_player.R'
+    'utils.R'
     'scrape.R'
+    'games.R'
     'player.R'
 RoxygenNote: 5.0.1

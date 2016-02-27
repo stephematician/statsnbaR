@@ -4,7 +4,7 @@
 \alias{valid_filters}
 \title{Validate key-value pairs as being statsnbaR-recognisable}
 \usage{
-valid_filters(filters)
+valid_filters(filters, allow_na = TRUE)
 }
 \arguments{
 \item{filters}{Named list of key-value pairs used internally by statsnbaR}

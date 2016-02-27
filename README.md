@@ -4,11 +4,9 @@ _Stephen Wade 22/02/2016_
 
 ### R interface to stats.nba.com
 
-This is a simple interface to stats.nba.com based off of the Python package
-[nba_py](https://github.com/seemethere/nba_py), which is sadly outdated as
-of February 2016.
+This is a simple interface to stats.nba.com.
 
-Before going into any further details of the package, there are some
+Before going into any further details of this package, there are some
 house-keeping tasks:
 
   1. All the data from the website is Copyright (c) 2016 NBA Media Ventures, LLC.
@@ -52,26 +50,26 @@ install_github('stephematician/statsnbaR')
 ### Player data examples
 Let's just have a look at the player data from the 2015-2016 season, and
 select the D-League players who are active:
-
 ```r
 library(statsnbaR)
 library(dplyr)
 dleague_players <- get_players(league='d-league')
 
 head(filter(dleague_players, roster_status==TRUE) %>%
-     select(person_id, first_name, last_name, team_city, team_name))
-
+     select(person_id, first_name, last_name, team_id, team_city, team_name))
 ```
 
-| person_id|first_name |last_name     |team_city   |team_name |
-|---------:|:----------|:-------------|:-----------|:---------|
-|    201861|Antoine    |Agudio        |Canton      |Charge    |
-|   1627378|Mychal     |Ammons        |Idaho       |Stampede  |
-|    203648|Thanasis   |Antetokounmpo |Westchester |Knicks    |
-|    203951|Keith      |Appling       |Erie        |BayHawks  |
-|   1626276|Darion     |Atkins        |Westchester |Knicks    |
-|   1627359|Eric       |Atkins        |Erie        |BayHawks  |
+| person_id|first_name |last_name     |    team_id|team_city   |team_name |
+|---------:|:----------|:-------------|----------:|:-----------|:---------|
+|    201861|Antoine    |Agudio        | 1612709893|Canton      |Charge    |
+|   1627378|Mychal     |Ammons        | 1612709903|Idaho       |Stampede  |
+|    203648|Thanasis   |Antetokounmpo | 1612709919|Westchester |Knicks    |
+|    203951|Keith      |Appling       | 1612709913|Erie        |BayHawks  |
+|   1626276|Darion     |Atkins        | 1612709919|Westchester |Knicks    |
+|   1627359|Eric       |Atkins        | 1612709913|Erie        |BayHawks  |
 
+  - The `person_id` and `team_id` are important keys for other data such as 
+    shot charts.
 
 #### Traditional statistics
 
@@ -79,16 +77,16 @@ We might also want to know their traditional stats for their last 10 games, in,
 say a previous season (just to show you how to do this kind of query)
 
 ```r
-filter_last10 <- filter_per_player(league='d-league',
+filter_last10 = filter_per_player(league='d-league',
                                    last_n=10,
                                    season=2014)
-ppd_last10_2014 <- per_player_data(filter_last10)
+ppd_last10_2014 = per_player_data(filter_last10)
 
-ppd_last10_2014 <- filter(ppd_last10_2014,
-                          person_id %in% dleague_players$person_id) %>%
-                   select(-c(person_id, team_id))
-
+ppd_last10_2014 = filter(ppd_last10_2014,
+                         person_id %in% dleague_players$person_id) %>%
+                  select(-c(person_id, team_id))
 ```
+
 |player_name    |team_abbr | age| games| win| loss|     mins| fgm| fga| fg3m| fg3a| ftm| fta| oreb| dreb| reb| ast| tov| stl| blk| blka| pf| pfd| points| plus_minus| dd2| td3|
 |:--------------|:---------|---:|-----:|---:|----:|--------:|---:|---:|----:|----:|---:|---:|----:|----:|---:|---:|---:|---:|---:|----:|--:|---:|------:|----------:|---:|---:|
 |A.J. Davis     |SXF       |  27|     9|   6|    3| 102.6350|   6|  29|    1|   14|   5|  10|    0|   16|  16|   3|   7|   2|   2|    2|  5|   9|     18|         -3|   0|   0|
@@ -100,24 +98,24 @@ ppd_last10_2014 <- filter(ppd_last10_2014,
 
 We can see that Aaron Craft was ballin' in the last ten games of the 2014-15
 D-League season. Did he ever play the NBA?
-
 ```r
 # 2015-16 is the default
-nba_players <- get_players(league='nba')
+nba_players = get_players(league='nba')
+filter(nba_players, last_name=='Craft')
 ```
-Nope. Oh well!
+
+Aww, empty data.frame. Oh well!
 
 #### Advanced statistics
 
-You can also get more advanced stats by specifying `measurement='advanced'` in
-the call to per_player_data.
+You can also get more advanced statistics by specifying `measurement='advanced'`
+in the call to per_player_data.
 ```r
-ppad_last10_2014 <- per_player_data(filter_last10,
+ppad_last10_2014 = per_player_data(filter_last10,
                                     measurement='advanced')
 ```
 
-Again selecting only the players that played this year using the filter we
-get the following output:
+Again selecting only the D-league players that played this year:
 
 |player_name    |team_abbr | age| games| win| loss| mins| off_rtg| def_rtg| net_rtg| ast_pct| ast/tov| ast_ratio| oreb_pct| dreb_pct| reb_pct| tov_pct| EFG_pct| ts_pct| usg_pct|   pace|    PIE|
 |:--------------|:---------|---:|-----:|---:|----:|----:|-------:|-------:|-------:|-------:|-------:|---------:|--------:|--------:|-------:|-------:|-------:|------:|-------:|------:|------:|
@@ -128,11 +126,12 @@ get the following output:
 |Akeem Richmond |RGV       |  24|     2|   1|    1|  3.4|    66.7|   115.1|   -48.4|   0.000|    0.00|       0.0|    0.000|    0.000|   0.000|     0.0|   0.000|  0.000|   0.267| 107.35| -0.160|
 |Akil Mitchell  |RGV       |  23|    10|   5|    5| 21.7|   113.8|   115.0|    -1.2|   0.088|    1.00|      15.8|    0.112|    0.289|   0.196|    15.8|   0.587|  0.540|   0.141| 107.48|  0.093|
 
-#### Changing returned values via `per`
+#### Setting `per` game, possession, minute
 
-You might notice that the results are in per-game format, whereas for the
-basic stats they were in totals. You can actually get per-game basic stats, too,
-by setting `per='game'` in the filter.
+You might notice that the results for the advanced stats appear to be in
+per-game format, whereas for the basic stats they were in totals. You can
+actually get per-game traditional stats, too, by setting `per='game'` in the
+filter. This is what the output would look like.
 
 |player_name    |team_abbr | age| games| win| loss| mins| fgm|  fga| fg3m| fg3a| ftm| fta| oreb| dreb| reb| ast| tov| stl| blk| blka|  pf| pfd| points| plus_minus| dd2| td3|
 |:--------------|:---------|---:|-----:|---:|----:|----:|---:|----:|----:|----:|---:|---:|----:|----:|---:|---:|---:|---:|---:|----:|---:|---:|------:|----------:|---:|---:|
@@ -143,14 +142,81 @@ by setting `per='game'` in the filter.
 |Akeem Richmond |RGV       |  24|     2|   1|    1|  3.4| 0.0|  2.0|  0.0|  2.0| 0.0| 0.0|  0.0|  0.0| 0.0| 0.0| 0.0| 0.0| 0.0|  0.0| 0.0| 0.0|    0.0|       -4.0|   0|   0|
 |Akil Mitchell  |RGV       |  23|    10|   5|    5| 21.7| 3.0|  5.2|  0.1|  0.5| 0.9| 2.9|  2.6|  6.1| 8.7| 1.5| 1.5| 0.6| 0.5|  0.2| 2.2| 2.0|    7.0|       -1.0|   1|   0|
 
+You can see that the minutes value now matches up and looks like a per-game
+number of minutes.
+
+There are a couple of things worth noticing about the data returned by the 
+queries:
+
+  - The data returned by JSON seems to be clearly character based, so total
+    values might be more useful for any careful analysis as they won't
+    suffer whatever rounding stats.nba.com offers
+  - Also notice that percentages are given as not-percentages, e.g. they are
+    given as the actual raw 'rates' between 0 and 1.
+  - Wins, losses, etc - are not subject to the usual `per='game'` rules, i.e.
+    these values always return totals.
+    
+In general, it is always worth looking at a few records of the returned data
+to get an idea what units the values are actually returning for different
+queries.
+
 
 ### Team data examples
 
 ### Game log examples
 
+These are broken into two sets; the player game log or the team game
+log.
+
+#### Player game log
+
+Game log queries are relatively similar to getting the names and details of
+players via `get_players()`.
+```r
+gl_2013 = get_game_log(league='nba', season=2013)
+head(select(gl_2013, -c(season, team_abbr, team_name, fgm:plus_minus)))
+```
+And the output produced looks something like:
+
+| person_id|player_name     |  game_id|game_date  |matchup     |win   | mins| video|
+|---------:|:---------------|--------:|:----------|:-----------|:-----|----:|:-----|
+|      2546|Carmelo Anthony | 21300640|2014-01-24 |NYK vs. CHA |TRUE  |   39|TRUE  |
+|      2544|LeBron James    | 21300893|2014-03-03 |MIA vs. CHA |TRUE  |   41|TRUE  |
+|    201142|Kevin Durant    | 21300592|2014-01-17 |OKC vs. GSW |TRUE  |   44|TRUE  |
+|    201147|Corey Brewer    | 21301183|2014-04-11 |MIN vs. HOU |TRUE  |   45|TRUE  |
+|    201142|Kevin Durant    | 21301024|2014-03-21 |OKC @ TOR   |TRUE  |   52|TRUE  |
+|    203082|Terrence Ross   | 21300647|2014-01-25 |TOR vs. LAC |FALSE |   44|TRUE  |
+
+  - The `game_id` is an important key for other data such as 
+    shot charts, and play-by-play data.
+  - _This is a large set of data, so if you only want `game_id`s, then team game
+    logs is one easier approach_.
+
+#### Team game logs
+
+This is the same as the player game log, as an example only, I've also selected
+a `season_type` here - which you may also do for player game logs.
+
+_This is a much smaller set of data, so if you only want `game_id`s this would
+be the way to retrieve them_.
+
+
+### Play-by-play examples
+
 ### Shot chart examples
 
 ### Notes
+
+#### Alternatives
+
+An Alternative to this package is the more highly featured
+[nbastatsR](https://www.github.com/abresler/nbastatR) package, definitely
+worth a look.
+
+This package was partly inspired by
+[nba_py](https://github.com/seemethere/nba_py) which, sadly, seems outdated.
+
+#### Testing platform
 
 This package was built and tested with the following R software:
 ```

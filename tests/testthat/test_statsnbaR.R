@@ -14,15 +14,28 @@ test_that(
 })
 
 test_that(
-'per player filter functions are available',
+'player biography filters are available',
+{
+    expect_true(exists('filter_bio'))
+})
+
+test_that(
+'player biography query function is available',
+{
+    expect_true(exists('get_bio'))
+})
+
+
+test_that(
+'per player aggregated data filters are available',
 {
     expect_true(exists('filter_per_player'))
     expect_true(exists('filter_per_player_clutch'))
 })
 
 test_that(
-'per player query functions are available',
+'per player query aggregated data query functions are available',
 {
-    expect_true(exists('per_player_data'))
+    expect_true(exists('per_player_agg'))
 })
 

@@ -16,45 +16,45 @@ test_that(
         expect_error(get_players(league='foo'),
                      paste('\\[statsnbaR get_players\\]',
                            'foo',
-                           'is not a valid league code.'))
+                           'is not a valid league name.'))
     })
 
 test_that(
-    'per_player_data checks inputs',
+    'per_player_agg checks inputs',
     {
-        expect_error(per_player_data(clutch='foo'),
-                     paste('\\[statsnbaR per_player_data\\] \'clutch\' must',
+        expect_error(per_player_agg(clutch='foo'),
+                     paste('\\[statsnbaR per_player_agg\\] \'clutch\' must',
                            'be logical'))
-        expect_error(per_player_data(measurement='foo'),
-                     paste('\\[statsnbaR per_player_data\\] invalid',
+        expect_error(per_player_agg(measurement='foo'),
+                     paste('\\[statsnbaR per_player_agg\\] invalid',
                            '\'measurement\' type specified'))
-        expect_error(per_player_data(filters=NULL),
-                     paste('\\[statsnbaR per_player_data\\] filters must be a',
+        expect_error(per_player_agg(filters=NULL),
+                     paste('\\[statsnbaR per_player_agg\\] filters must be a',
                            'valid key-pair list recognised by statsnbaR'))
-        expect_error(per_player_data(filter_per_player(league='foo')),
-                     paste('\\[statsnbaR per_player_data\\] filters must be a',
+        expect_error(per_player_agg(filter_per_player(league='foo')),
+                     paste('\\[statsnbaR per_player_agg\\] filters must be a',
                            'valid key-pair list recognised by statsnbaR'))
     })
 
 test_that(
-    'per_player_data checks inputs when clutch is true',
+    'per_player_agg checks inputs when clutch is true',
     {
-        expect_error(per_player_data(filter_per_player(league='foo'),
+        expect_error(per_player_agg(filter_per_player(league='foo'),
                                      clutch=TRUE),
-                     paste('\\[statsnbaR per_player_data\\] filters must be a',
+                     paste('\\[statsnbaR per_player_agg\\] filters must be a',
                            'valid key-pair list recognised by statsnbaR'))
-        expect_warning(per_player_data(filter_per_player(),
+        expect_warning(per_player_agg(filter_per_player(),
                                        clutch=TRUE),
-                       paste('\\[statsnbaR per_player_data\\] using default',
+                       paste('\\[statsnbaR per_player_agg\\] using default',
                              'clutch definition, to avoid this warning use',
                              'filter_player_clutch\\(\\) to construct filters',
                              'when \'clutch=TRUE\''))
     })
 
 test_that(
-    'per_player_data fails when filters are clutch but clutch is false',
+    'per_player_agg fails when filters are clutch but clutch is false',
     {
-        expect_error(per_player_data(filters=filter_per_player_clutch()),
+        expect_error(per_player_agg(filters=filter_per_player_clutch()),
                      paste('invalid filters.+specified for stats\\.nba\\.com',
                            'endpoint.+'))
     })

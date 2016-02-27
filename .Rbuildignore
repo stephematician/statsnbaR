@@ -1,6 +1,7 @@
 ^data-raw$
 inst/doc/*
+inst/man/*
 .gitignore
-README.md
 .git
 .build_manual.R
+README.md

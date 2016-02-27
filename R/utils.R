@@ -22,7 +22,7 @@ NULL
 #'
 #' The source code can be found at
 #' \url{http://www.github.com/stephematicina/statsnbaR/tree/master/R/utils.R}
-type_converters = list(
+type_converters <- list(
     'api_date'=function(x) {
                    if (!is.null(x)) {
                        format(x, format='%d/%m/%Y')
@@ -60,6 +60,9 @@ type_converters = list(
                  },
     'logical'=as.logical,
     'numeric'=as.numeric,
+    'numeric_or_na'=function(x) {
+                    suppressWarnings(as.numeric(x))
+                },
     'ordered'=ordered,
     'posix_date'=as.POSIXct
 )
@@ -71,7 +74,7 @@ type_converters = list(
 #' @param filters Named list of key-value pairs used internally by statsnbaR
 #' @return Logical result of tests
 #' @keywords internal
-valid_filters <- function(filters) {
+valid_filters <- function(filters, allow_na=TRUE) {
     
     is.list(filters) &&
     all(names(filters) %in% names(statsnbaR.ADL.filters)) &&
@@ -87,9 +90,13 @@ valid_filters <- function(filters) {
                    name <- names(filters)[j]
                    mapping <- statsnbaR.ADL.filters[[name]]$mapping
 
-                   ifelse(!is.null(mapping),
-                          filters[[j]] %in% names(mapping),
-                          TRUE)
+                   if (!is.null(mapping)) {
+                       filters[[j]] %in% names(mapping)
+                   } else if (!allow_na) {
+                       chk_class <- statsnbaR.ADL.filters[[name]]$class
+                       tc <- type_converters[[chk_class]]
+                       !is.null(tc(filters[[j]])) && !is.na(tc(filters[[j]]))
+                   } else TRUE
                }))
 }
 
