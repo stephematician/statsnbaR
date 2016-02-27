@@ -23,10 +23,14 @@ statsnbaR.ADL.host <- ADL_data$host
 # Need to check for any bad anchors
 # _yaml.bad-anchor_
 any_bad_anchor <- function(x) {
-  if (is.list(x)) {
-      any(names(x)=='_yaml.bad-anchor_') ||
-      any(sapply(x, any_bad_anchor))
-  } else FALSE
+    if (is.list(x)) {
+        any(names(x)=='_yaml.bad-anchor_') ||
+        any(sapply(x, any_bad_anchor))
+    } else {
+        if(!is.null(x) && !is.na(x)) {
+            x == '_yaml.bad-anchor_'
+        } else FALSE
+    }
 }
 
 if (any_bad_anchor(ADL_data)) {
@@ -41,7 +45,7 @@ if (any_bad_anchor(ADL_data)) {
                                                         sep='$'),
                                                   x[[j]])), collapse='\n')
             } else x_name
-        }
+        } else x_name
     }
     stop(paste('bad anchors detected for:\n',
                paste_bad_anchors('ADL_data', ADL_data)))

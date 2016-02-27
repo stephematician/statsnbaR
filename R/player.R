@@ -1,5 +1,7 @@
 #' Player data
 #'
+#'TODO shooting data
+#'
 #' @name player
 #' @include filter_player.R
 #' @include utils.R

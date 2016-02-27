@@ -2,10 +2,8 @@
 % Please edit documentation in R/games.R
 \name{games}
 \alias{games}
-\title{Game data functions
-TODO play by play}
+\title{Game data functions}
 \description{
-Game data functions
 TODO play by play
 }
 \keyword{internal}

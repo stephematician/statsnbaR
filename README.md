@@ -200,6 +200,35 @@ a `season_type` here - which you may also do for player game logs.
 _This is a much smaller set of data, so if you only want `game_id`s this would
 be the way to retrieve them_.
 
+As an example, we just use the playoffs from the 2014-15 season and try to find
+the finals games as we know that the finals were between Cleveland and Golden
+State:
+```r
+playoff_logs = team_game_logs(season=2014,
+                              season_type='playoff')
+cle_data = filter(playoff_logs, team_abbr=='CLE') %>%
+                  select(game_id)
+gsw_data = filter(playoff_logs, team_abbr=='GSW') %>%
+                  select(game_id)
+finals_data = filter(cle_data, game_id %in% gsw_data$game_id)
+
+head(filter(playoff_logs,
+            game_id %in% finals_data$game_id) %>%
+     select(-c(season,fgm:video)) %>%
+     arrange(game_id))
+```
+
+|    team_id|team_abbr |team_name             |  game_id|game_date  |home  |win   | mins|
+|----------:|:---------|:---------------------|--------:|:----------|:-----|:-----|----:|
+| 1610612744|GSW       |Golden State Warriors | 41400401|2015-06-04 |FALSE |TRUE  |  265|
+| 1610612739|CLE       |Cleveland Cavaliers   | 41400401|2015-06-04 |FALSE |FALSE |  265|
+| 1610612739|CLE       |Cleveland Cavaliers   | 41400402|2015-06-07 |FALSE |TRUE  |  265|
+| 1610612744|GSW       |Golden State Warriors | 41400402|2015-06-07 |FALSE |FALSE |  265|
+| 1610612739|CLE       |Cleveland Cavaliers   | 41400403|2015-06-09 |FALSE |TRUE  |  240|
+| 1610612744|GSW       |Golden State Warriors | 41400403|2015-06-09 |FALSE |FALSE |  240|
+
+This shows how the team logs will admit two rows per game, with data for each
+team (I've omitted some of that output here via the `select` command).
 
 ### Play-by-play examples
 

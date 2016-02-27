@@ -1,4 +1,5 @@
 #' Game data functions
+#'
 #' TODO play by play
 #'
 #' @name games
@@ -93,7 +94,7 @@ player_game_logs <- function(league,
         filters$league <- league
     }
 
-    r <- api_scrape('game_log', filters=filters)
+    r <- api_scrape('player_game_log', filters=filters)
 
     if (length(r) != 1) stop(paste('[statsnbaR player_game_logs] unexpected',
                                    'number of result sets returned by',
@@ -155,7 +156,7 @@ team_game_logs <- function(league,
         filters$league <- league
     }
 
-    r <- api_scrape('game_log', filters=filters)
+    r <- api_scrape('team_game_log', filters=filters)
 
     if (length(r) != 1) stop(paste('[statsnbaR team_game_logs] unexpected',
                                    'number of result sets returned by',

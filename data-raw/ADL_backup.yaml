@@ -7,12 +7,22 @@
 # Stephen Wade
 # 26/02/2016
 
-- &numeric { class : numeric }
-- &integer { class : integer }
-- &character { class : character }
-- &numeric_or_na { class : numeric_or_na }
-- &logical { class : logical }
----
+def_numeric : &numeric {
+    class : numeric
+    }
+def_integer : &integer { 
+    class : integer
+    }
+def_character : &character {
+    class : character
+    }
+def_number_or_na : &number_or_na {
+    class : numeric_or_na
+    }
+def_logical : &logical {
+    class : logical
+    }
+
 host : "http://stats.nba.com/"
 
 # These mappings are all specified (manually) using Chromium's developer
@@ -510,22 +520,22 @@ data    :
     &draft_number draft_number  : *numeric_or_na
 
     #game log data
-    &game_date game_date    :
+    &game_date game_date :
         class   : date
-    &game_at_home home      :
+    &game_at_home home :
         class   : home_from_matchup
-    &game_outcome win       :
+    &game_outcome win :
         class   : logical
         mapping : {
             'W' : TRUE,
             'L' : FALSE
             }
-    &video video            : *logical
-    &game_season season     : *numeric
-
+    &video video : *logical
+    &game_season season : *numeric
+    
 # regex i'm using to help when i copy from endpoints to make new data types
 # ([ ]*)\*([A-Za-z0-9_]+)[ ]+:.+
-# \1&\2 \2 : *numeric
+# \1&\2 \2 :\n        class   : numeric
 
 # These endpoints are all specified (manually) using Chromium's developer
 # tools to inspect the XHR  
@@ -690,7 +700,7 @@ endpoints :
         api.name     : "leaguedashplayerstats"
         api.path     : "stats"
         api.referrer : "http://stats.nba.com/league/player/"
-        api.filters  : *ldps_filter
+        api.filters  : *ldps_filters
         api.results  :
             LeagueDashPlayerStats : &pp_scoring_results {
                 *person_id             : "player_id",
@@ -719,9 +729,9 @@ endpoints :
         api.name     : "leaguedashplayerstats"
         api.path     : "stats"
         api.referrer : "http://stats.nba.com/league/player/"
-        api.filters  : *ldps_filter
+        api.filters  : *ldps_filters
         api.results  :
-            LeagueDashPlayerStats : &pp_usage_results {
+            LeagueDashPlayerStats : {
                 *person_id           : "player_id",
                 *player_name         : "player_name",
                 *team_id             : "team_id",
@@ -974,42 +984,41 @@ endpoints :
             *start_period : "StartPeriod",
             }
         api.results :
-#            LeagueGameLog : {
-#                *game_id                    : "game_id",
-#                *eventnum                   : "eventnum",
-#                *eventmsgtype               : "eventmsgtype",
-#                *eventmsgactiontype         : "eventmsgactiontype",
-#                *period                     : "period",
-#                *wctimestring               : "wctimestring",
-#                *pctimestring               : "pctimestring",
-#                *homedescription            : "homedescription",
-#                *neutraldescription         : "neutraldescription",
-#                *visitordescription         : "visitordescription",
-#                *score                      : "score",
-#                *scoremargin                : "scoremargin",
-#                *person1type                : "person1type",
-#                *player1_id                 : "player1_id",
-#                *player1_name               : "player1_name",
-#                *player1_team_id            : "player1_team_id",
-#                *player1_team_city          : "player1_team_city",
-#                *player1_team_nickname      : "player1_team_nickname",
-#                *player1_team_abbreviation  : "player1_team_abbreviation",
-#                *person2type                : "person2type",
-#                *player2_id                 : "player2_id",
-#                *player2_name               : "player2_name",
-#                *player2_team_id            : "player2_team_id",
-#                *player2_team_city          : "player2_team_city",
-#                *player2_team_nickname      : "player2_team_nickname",
-#                *player2_team_abbreviation  : "player2_team_abbreviation",
-#                *person3type                : "person3type",
-#                *player3_id                 : "player3_id",
-#                *player3_name               : "player3_name",
-#                *player3_team_id            : "player3_team_id",
-#                *player3_team_city          : "player3_team_city",
-#                *player3_team_nickname      : "player3_team_nickname",
-#                *player3_team_abbreviation  : "player3_team_abbreviation"
-#                }
-
+            LeagueGameLog : {
+                *game_id                    : "game_id",
+                *eventnum                   : "eventnum",
+                *eventmsgtype               : "eventmsgtype",
+                *eventmsgactiontype         : "eventmsgactiontype",
+                *period                     : "period",
+                *wctimestring               : "wctimestring",
+                *pctimestring               : "pctimestring",
+                *homedescription            : "homedescription",
+                *neutraldescription         : "neutraldescription",
+                *visitordescription         : "visitordescription",
+                *score                      : "score",
+                *scoremargin                : "scoremargin",
+                *person1type                : "person1type",
+                *player1_id                 : "player1_id",
+                *player1_name               : "player1_name",
+                *player1_team_id            : "player1_team_id",
+                *player1_team_city          : "player1_team_city",
+                *player1_team_nickname      : "player1_team_nickname",
+                *player1_team_abbreviation  : "player1_team_abbreviation",
+                *person2type                : "person2type",
+                *player2_id                 : "player2_id",
+                *player2_name               : "player2_name",
+                *player2_team_id            : "player2_team_id",
+                *player2_team_city          : "player2_team_city",
+                *player2_team_nickname      : "player2_team_nickname",
+                *player2_team_abbreviation  : "player2_team_abbreviation",
+                *person3type                : "person3type",
+                *player3_id                 : "player3_id",
+                *player3_name               : "player3_name",
+                *player3_team_id            : "player3_team_id",
+                *player3_team_city          : "player3_team_city",
+                *player3_team_nickname      : "player3_team_nickname",
+                *player3_team_abbreviation  : "player3_team_abbreviation",           
+            }
 # regex i'm using to assist after copy and paste from chromium          
 #.*: "([A-Z0-9_]+)"
 #                *\L\1 : "\L\1",

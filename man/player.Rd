@@ -4,7 +4,7 @@
 \alias{player}
 \title{Player data}
 \description{
-Player data
+TODO shooting data
 }
 \keyword{internal}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/games.R
 \name{team_game_logs}
 \alias{team_game_logs}
-\title{Retrieve player game logs}
+\title{Retrieve team game logs}
 \usage{
 team_game_logs(league, season, season_type)
 }
@@ -17,7 +17,7 @@ team_game_logs(league, season, season_type)
 TODO
 }
 \description{
-Retrieves all player game logs from stats.nba.com for a given season and
+Retrieves all team game logs from stats.nba.com for a given season and
 league.
 }
 \details{

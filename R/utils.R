@@ -48,6 +48,10 @@ type_converters <- list(
     'first_name'=function(x) {
                     sub('^(.*),[\\s]*(.*)$', '\\2', x, perl=TRUE)
                  },
+    'home_from_matchup'=function(x) {
+                    grepl('^[A-Z\\s]+vs.[A-Z\\s]+$', x, perl=TRUE) || 
+                    !grepl('^[A-Z\\s]+@[A-Z\\s]+$', x, perl=TRUE)
+                 },
     'hexmode'=function(x) {
                   if (!length(x)) {
                       return(character(0))
