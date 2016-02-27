@@ -177,11 +177,20 @@ api_scrape <- function(endpoint, filters) {
         stop(paste('[stats_nba scrape] invalid result returned by',
                    'stats.nba.com endpoint'))
 
-    # flatten the data into a nice data.frame
-    untyped_data <- lapply(json_data$resultSets,
-                           flatten_json_rowSet)
-    names(untyped_data) <- sapply(json_data$resultSets,
-                                  function(x) x$name)
+    # flatten the data into a nice data.frame, unfortunately there is an
+    # edge case where the resultSets are not returned as a list of resultSets
+    # and so we need to account for this.
+    untyped_data <- NULL
+    if (is.null(names(json_data$resultSets))) {
+        untyped_data <- lapply(json_data$resultSets,
+                               flatten_json_rowSet)
+        names(untyped_data) <- sapply(json_data$resultSets,
+                                      function(x) x$name)
+    } else {
+        untyped_data <- list(flatten_json_rowSet(json_data$resultSets))
+        names(untyped_data) <- json_data$resultSets$name
+    }
+
     # Convert to 'useful' data types
     lapply(names(ADL.endpoint$api.results),
            function(result_name) {

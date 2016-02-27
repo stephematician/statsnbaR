@@ -202,24 +202,36 @@ map_filter_values <- function(filters) {
 #'
 #' Check output of API matches basic format
 #'
-#' @param api_result The list returned by \code{content} applied to the
+#' @param api_result list returned by \code{content} applied to the
 #'   result of a query of stats.nba.com
-#' @return Logical result of tests
+#' @return logical result of tests
 #' @keywords internal
 valid_results <- function(api_result) {
     is.list(api_result) &&
     (length(names(api_result)) == 3) &&
     all(c('parameters', 'resource', 'resultSets') %in% names(api_result)) &&
-    all(sapply(api_result$resultSets,
-        function(f) {
-            length(names(f)) == 3 &&
-            names(f) %in% c('name', 'headers', 'rowSet')  &&
-            class(f$rowSet) == 'list' &&
-            all(sapply(f$rowSet,
-                       function(rs) {
-                           length(rs) == length(f$headers)
-                       }))
-        }))
+    # unfortunately there is an edge case where the resultSets are not returned
+    # as a list of resultSets and so we need to account for this.
+    if (is.null(names(api_result$resultSets))) {
+        all(sapply(api_result$resultSets, valid_resultSet))
+    } else valid_resultSet(api_result$resultSets)
+}
+
+#' Check output of API matches basic format
+#'
+#' Check output of API matches basic format
+#'
+#' @param rs a resultSet as they appear in JSON data from stats.nba.com
+#' @return logical result of tests
+#' @keywords internal
+valid_resultSet <- function(rs) {
+    length(names(rs)) == 3 &&
+    names(rs) %in% c('name', 'headers', 'rowSet')  &&
+    class(rs$rowSet) == 'list' &&
+    all(sapply(rs$rowSet,
+               function(x) {
+                   length(x) == length(rs$headers)
+               }))
 }
 
 #' Flatten JSON result sets
@@ -246,11 +258,62 @@ flatten_json_rowSet <- function(json_result) {
                 })
     a <- data.frame(matrix(unlist(a), nrow=length(a), byrow=TRUE),
                     stringsAsFactors=FALSE)
-    names(a) <- tolower(unlist(json_result$headers))
+
+    names(a) <- parse_json_headers(json_result$headers)
 
     return(a)
 }
 
+#' Parse the returned JSON header information
+#'
+#' This is a dogs breakfast of a hack. It seems that stats.nba.com has some
+#' edge-case header and resultSet behaviour that means we need to stitch
+#' together repeated column names, e.g. fga less than 5ft, fgm less than 5ft,
+#' fg_pct less than 5ft. (and then for 5-9ft and so on).
+#'
+#' @param headers List contained the header info as returned by stats.nba.com
+#    API endpoint
+#' @return character values of column names, stitched together when
+#    necessary
+#' @keywords internal
+parse_json_headers <- function(headers) {
+    # This is a terrible hack
+    pjh_error_msg <- paste('[statsnbaR parse_json_headers] unexpected format',
+                           'of headers in returned data.')
+
+    if (length(headers) == 2) {
+    
+        lhs_ind <- which(sapply(headers, function(x) x$name) == 'columns')
+        
+        if (sum(lhs_ind) != 1 ||
+            !all(c('columnSpan', 'columnNames') %in%
+                 names(headers[[lhs_ind]])) ||
+            headers[[lhs_ind]]$columnSpan != 1)
+            stop(paste(pjh_error_msg,
+                      'Missing columnSpan (=1) or columnNames in \'columns\'',
+                      'header'))
+        lhs <- tolower(unlist(headers[[lhs_ind]]$columnNames))
+        
+        categories <- headers[[!lhs_ind]]
+
+        if (!all(c('columnSpan', 'columnNames') %in% 
+                 names(categories)))
+            stop(paste(pjh_error_msg,
+                       'Missing columnSpan or columnNames in \'other\'',
+                       'header info'))
+
+        column_skip <- 0
+        if ('columnSkip' %in% names(categories))
+            column_skip <- categories$columnSkip
+        column_span <- categories$columnSpan
+
+        rep_category <- rep(tolower(unlist(categories$columnNames)),
+                            each=column_span)
+        rhs <- c(rep('', column_skip), rep_category)
+
+        paste(lhs, rhs)
+    } else tolower(unlist(headers))
+}
 
 #' Map flattened NBA API data to statsnbaR data
 #'

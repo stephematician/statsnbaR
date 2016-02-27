@@ -9,7 +9,6 @@
 NULL
 
 
-
 #' Retrieve player game logs
 #'
 #' @description
@@ -102,10 +101,10 @@ player_game_logs <- function(league,
     return(r[[1]])
 }
 
-#' Retrieve player game logs
+#' Retrieve team game logs
 #'
 #' @description
-#' Retrieves all player game logs from stats.nba.com for a given season and
+#' Retrieves all team game logs from stats.nba.com for a given season and
 #' league. 
 #'
 #' @details
@@ -114,7 +113,7 @@ player_game_logs <- function(league,
 #' @param league TODO
 #' @param season TODO
 #' @param season_type TODO
-#' @returns TODO
+#' @return TODO
 #' @seealso \code{\link{player_game_logs}}
 #' @export
 team_game_logs <- function(league,
