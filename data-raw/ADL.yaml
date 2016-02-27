@@ -378,103 +378,103 @@ data    :
         class   : numeric
     &fta fta :
         class   : numeric
-    &o_boards offensive_boards :
+    &o_boards oreb :
         class   : numeric
-    &d_boards defensive_boards :
+    &d_boards dreb :
         class   : numeric
-    &boards boards :
+    &boards reb :
         class   : numeric
-    &assists assists :
+    &assists ast :
         class   : numeric
-    &turnovers turnovers :
+    &turnovers tov :
         class   : numeric
-    &steals steals :
+    &steals stl :
         class   : numeric
-    &blocks blocks :
+    &blocks blk :
         class   : numeric
-    &block_against block_against :
+    &block_against blka :
         class   : numeric
-    &fouls fouls :
+    &fouls pf :
         class   : numeric
-    &fouls_drawn fouls_drawn :
+    &fouls_drawn pfd :
         class   : numeric
     &points points :
         class   : numeric
-    &plus_minus plus_minus :
+    &plus_minus plus_minus:
         class   : numeric
-    &double_double double_double :
+    &double_double dd2 :
         class   : numeric
-    &triple_double triple_double :
+    &triple_double td3 :
         class   : numeric
-    &o_rating offensive_rating :
+    &o_rating off_rtg :
         class   : numeric
-    &d_rating defensive_rating :
+    &d_rating def_rtg :
         class   : numeric
-    &net_rating net_rating :
+    &net_rating net_rtg :
         class   : numeric
-    &assist_percent assist_percent :
+    &assist_percent ast_pct :
         class   : numeric
-    &assist_turnover assist_turnover :
+    &assist_turnover ast/tov :
         class   : numeric
-    &assist_rate assist_rate :
+    &assist_ratio ast_ratio :
         class   : numeric
-    &o_board_percent offensive_boards_percent :
+    &o_board_percent oreb_pct :
         class   : numeric
-    &d_board_percent defensive_boards_percent :
+    &d_board_percent dreb_pct :
         class   : numeric
-    &board_percent board_percent :
+    &board_percent reb_pct :
         class   : numeric
-    &turnover_rate turnover_rate :
+    &turnover_rate tov_pct :
         class   : numeric
-    &efg_percent EFG_percent :
+    &efg_percent EFG_pct :
         class   : numeric
-    &ts_percent true_shooting_percent :
+    &ts_percent ts_pct :
         class   : numeric
-    &usage_percent usage_percent :
+    &usage_percent usg_pct :
         class   : numeric
     &pace pace :
         class   : numeric
     &pie PIE :
         class   : numeric
-    &points_off_TO points_off_TO :
+    &points_off_TO pts_off_tov :
         class   : numeric
-    &points_sec_chance points_sec_chance :
+    &points_sec_chance pts_2ndC :
         class   : numeric
-    &points_fast_break points_fast_break :
+    &points_fast_break pts_FB :
         class   : numeric
-    &points_in_paint points_in_paint :
+    &points_in_paint pts_paint :
         class   : numeric
-    &opp_points_off_TO opp_points_off_TO :
+    &opp_points_off_TO opp_pts_off_tov :
         class   : numeric
-    &opp_points_sec_chance opp_points_sec_chance :
+    &opp_points_sec_chance opp_pts_2ndC :
         class   : numeric
-    &opp_points_fast_break opp_points_fast_break :
+    &opp_points_fast_break opp_pts_FB :
         class   : numeric
-    &opp_points_in_paint  opp_points_in_paint :
+    &opp_points_in_paint  opp_pts_paint :
         class   : numeric 
-    &fg2a_percent fg2a_percent :
+    &fg2a_percent fg2a_pct :
         class   : numeric 
-    &fg3a_percent fg3a_percent :
+    &fg3a_percent fg3a_pct :
         class   : numeric 
-    &pts2_percent pts2_percent :
+    &pts2_percent pts2_pct :
         class   : numeric 
-    &pts2_midrange_percent pts2_midrange_percent :
+    &pts2_midrange_percent pts2_MR_pct :
         class   : numeric 
     &pts3_percent pts3_percent :
         class   : numeric 
-    &pts_fastbreak_percent pts_fastbreak_percent :
+    &pts_fastbreak_percent pts_FB_pct :
         class   : numeric 
-    &pts_freethrow_percent pts_freethrow_percent :
+    &pts_freethrow_percent pts_ft_pct :
         class   : numeric 
-    &pts_off_TO_percent pts_off_TO_percent :
+    &pts_off_TO_percent pts_off_tov_pct :
         class   : numeric 
-    &pts_paint_percent pts_paint_percent :
+    &pts_paint_percent pts_paint_pct :
         class   : numeric 
-    &pts2m_assist_percent pts2m_assist_percent :
+    &pts2m_assist_percent pts2m_pct_ast :
         class   : numeric 
-    &pts3m_assist_percent pts3m_assist_percent :
+    &pts3m_assist_percent pts3m_pct_ast :
         class   : numeric 
-    &fgm_assist_percent fgm_assist_percent :
+    &fgm_assist_percent fgm_pct_ast :
         class   : numeric
     &fgm_usage fgm_usage :
         class   : numeric
@@ -488,27 +488,27 @@ data    :
         class   : numeric
     &fta_usage fta_usage :
         class   : numeric
-    &o_board_usage o_board_usage :
+    &o_board_usage oreb_usage :
         class   : numeric
-    &d_board_usage d_board_usage :
+    &d_board_usage dreb_usage :
         class   : numeric
-    &board_usage board_usage :
+    &board_usage reb_usage :
         class   : numeric
-    &assist_usage assist_usage :
+    &assist_usage ast_usage :
         class   : numeric
     &TO_usage TO_usage :
         class   : numeric
-    &steal_usage steal_usage :
+    &steal_usage stl_usage :
         class   : numeric
-    &block_usage block_usage :
+    &block_usage blk_usage :
         class   : numeric
-    &block_against_usage block_against_usage :
+    &block_against_usage blka_usage :
         class   : numeric
-    &fouls_usage fouls_usage :
+    &fouls_usage pf_usage :
         class   : numeric
-    &fouls_drawn_usage fouls_drawn_usage :
+    &fouls_drawn_usage pfd_usage :
         class   : numeric
-    &points_usage points_usage :
+    &points_usage pts_usage :
         class   : numeric
 
 # helpful search + replace regex
@@ -632,7 +632,7 @@ endpoints :
                 *net_rating      : "net_rating",
                 *assist_percent  : "ast_pct",
                 *assist_turnover : "ast_to",
-                *assist_rate     : "ast_ratio",
+                *assist_ratio    : "ast_ratio",
                 *o_board_percent : "oreb_pct",
                 *d_board_percent : "dreb_pct",
                 *board_percent   : "reb_pct",

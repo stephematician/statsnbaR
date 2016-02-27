@@ -149,6 +149,7 @@ filter_per_player_worker <- function(endpoint, ...) {
 #'   function \code{\link{per_player_data}} with argument \code{clutch=FALSE}.
 #'
 #' @seealso \code{\link{per_player_data}}
+#' @export
 filter_per_player <- function(...) {
 
     filter_per_player_worker(statsnbaR.ADL.endpoints$per_player_base,
@@ -189,6 +190,7 @@ filter_per_player <- function(...) {
 #'   function \code{\link{per_player_data}} with argument \code{clutch=TRUE}.
 #'
 #' @seealso \code{\link{per_player_data}} \code{\link{filter_per_player}}
+#' @export
 filter_per_player_clutch <- function(...) {
 
     filter_per_player_worker(statsnbaR.ADL.endpoints$per_player_base_clutch,

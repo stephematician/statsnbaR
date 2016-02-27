@@ -141,7 +141,7 @@ get_players <- function(league, season) {
 #'
 #' @seealso \code{\link{filter_per_player}}
 #'   \code{\link{filter_per_player_clutch}}
-#' 
+#' @export
 per_player_data <- function(filters=filter_per_player(),
                             clutch=FALSE,
                             measurement='base') {
