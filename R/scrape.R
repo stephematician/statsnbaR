@@ -194,7 +194,6 @@ api_scrape <- function(endpoint, filters) {
     # Convert to 'useful' data types
     lapply(names(ADL.endpoint$api.results),
            function(result_name) {
-
                map_results(untyped_data[[result_name]],
                            ADL.endpoint$api.results[[result_name]])
            })

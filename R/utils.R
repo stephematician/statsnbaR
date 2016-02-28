@@ -49,7 +49,7 @@ type_converters <- list(
                     sub('^(.*),[\\s]*(.*)$', '\\2', x, perl=TRUE)
                  },
     'home_from_matchup'=function(x) {
-                    grepl('^[A-Z\\s]+vs.[A-Z\\s]+$', x, perl=TRUE) || 
+                    grepl('^[A-Z\\s]+vs\\.[A-Z\\s]+$', x, perl=TRUE) | 
                     !grepl('^[A-Z\\s]+@[A-Z\\s]+$', x, perl=TRUE)
                  },
     'hexmode'=function(x) {
@@ -79,7 +79,7 @@ type_converters <- list(
 #' @return Logical result of tests
 #' @keywords internal
 valid_filters <- function(filters, allow_na=TRUE) {
-    
+
     is.list(filters) &&
     all(names(filters) %in% names(statsnbaR.ADL.filters)) &&
     all(sapply(filters,
@@ -286,9 +286,9 @@ parse_json_headers <- function(headers) {
                            'of headers in returned data.')
 
     if (length(headers) == 2) {
-    
+
         lhs_ind <- which(sapply(headers, function(x) x$name) == 'columns')
-        
+
         if (sum(lhs_ind) != 1 ||
             !all(c('columnSpan', 'columnNames') %in%
                  names(headers[[lhs_ind]])) ||
@@ -297,7 +297,7 @@ parse_json_headers <- function(headers) {
                       'Missing columnSpan (=1) or columnNames in \'columns\'',
                       'header'))
         lhs <- tolower(unlist(headers[[lhs_ind]]$columnNames))
-        
+
         categories <- headers[[!lhs_ind]]
 
         if (!all(c('columnSpan', 'columnNames') %in% 
@@ -400,10 +400,13 @@ map_result_values <- function(df) {
                        tc <- type_converters[[statsnbaR.ADL.data[[j]]$class]]
 
                        nc <- df[,j]
-                       if (!is.null(mapping))
-                           nc <- mapping[as.character(nc)]
+                       if (!is.null(mapping)) {
+                           k <- !is.null(nc) & !is.na(nc)
+                           nc[k] <- unlist(mapping[as.character(nc[k])])
+                       }
                        if (!is.null(tc))
                            nc <- tc(nc)
+
                        return(data.frame(nc,
                                          stringsAsFactors=FALSE))
                    })
