@@ -52,6 +52,9 @@ type_converters <- list(
                     grepl('^[A-Z\\s]+vs\\.[A-Z\\s]+$', x, perl=TRUE) | 
                     !grepl('^[A-Z\\s]+@[A-Z\\s]+$', x, perl=TRUE)
                  },
+    'home_score'=function(x) {
+                     sub('^([0-9]+)[\\s]*-[\\s]*([0-9]+)$', '\\2', perl=TRUE)
+                 },
     'hexmode'=function(x) {
                   if (!length(x)) {
                       return(character(0))
@@ -68,7 +71,11 @@ type_converters <- list(
                     suppressWarnings(as.numeric(x))
                 },
     'ordered'=ordered,
-    'posix_date'=as.POSIXct
+    'posix_date'=as.POSIXct,
+    'visitor_score'=function(x) {
+                      sub('^([0-9]+)[\\s]*-[\\s]*([0-9]+)$', '\\1', perl=TRUE)
+                    }
+    
 )
 
 #' Validate key-value pairs as being statsnbaR-recognisable
@@ -385,7 +392,7 @@ map_results <- function(df,
 #'
 #' @seealso \code{\link{type_converters}}
 #'
-#' @param df The flattened JSON data.frame from stats.nba.com with statsnbaR
+#' @param df The flattened JSON data.)frame from stats.nba.com with statsnbaR
 #'   attribute names.
 #' @return Data.frame of converted and mapped data.
 #' @keywords internal
@@ -401,7 +408,7 @@ map_result_values <- function(df) {
 
                        nc <- df[,j]
                        if (!is.null(mapping)) {
-                           k <- !is.null(nc) & !is.na(nc)
+                           k <- !sapply(nc, is.null) & !is.na(nc) # not sure about this
                            nc[k] <- unlist(mapping[as.character(nc[k])])
                        }
                        if (!is.null(tc))

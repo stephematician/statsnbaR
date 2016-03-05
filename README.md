@@ -35,9 +35,15 @@ from a YAML which can be viewed on github:
 <http://www.github.com/stephematician/statsnbaR/tree/master/data-raw/ADL.yaml>.
 
 The package is split into player, team and game data. All the functions are
-fully documented, and so details can be found there. However for the sake of
-sales, here's some example code to give you an idea how easy it is to use the
-package
+fully documented, and so details can be found there. 
+
+For the sake of sales (hah), here's some example code to give you an idea how
+easy it is to use the package.
+
+### Demonstration
+
+A demonstration of the data, which admittedly was rushed together as part of
+a Coursera, can be found at <https://stephematician.shinyapps.io/nba_cluster>.
 
 ### Installation
 

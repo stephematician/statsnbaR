@@ -528,6 +528,33 @@ data    :
             '0' : FALSE
             }
     &game_season season     : *numeric
+    
+    # play-by-play data
+    &event_num pbp_event_id             : *numeric
+    &event_msg_type pbp_msg_type        : *numeric
+    &event_msg_action pbp_msg_action    : *numeric
+    &period period                      : *numeric
+    &world_clock world_clock            : *numeric
+    &game_clock game_clock              : *numeric
+    &home_msg home_msg                  : *numeric
+    &neutral_msg neutral_msg            : *numeric
+    &visitor_msg visitor_msg            : *numeric
+    &visitor_score visitor_score :
+        class   : visitor_score
+    &home_score home_score : 
+        class   : home_score
+    &person_type_1 person_type_1        : *numeric
+    &id_1 id_1                          : *numeric
+    &name_1 name_1                      : *character
+    &team_id_1 team_id_1                : *numeric
+    &person_type_2 person_type_2        : *numeric
+    &id_2 id_2                          : *numeric
+    &name_2 name_2                      : *character
+    &team_id_2 team_id_2                : *numeric
+    &person_type_3 person_type_3        : *numeric
+    &id_3 id_3                          : *numeric
+    &name_3 name_3                      : *character
+    &team_id_3 team_id_3                : *numeric
 
 # regex i'm using to help when i copy from endpoints to make new data types
 # ([ ]*)\*([A-Za-z0-9_]+)[ ]+:.+
@@ -979,41 +1006,32 @@ endpoints :
             *start_period : "StartPeriod",
             }
         api.results :
-#            LeagueGameLog : {
-#                *game_id                    : "game_id",
-#                *eventnum                   : "eventnum",
-#                *eventmsgtype               : "eventmsgtype",
-#                *eventmsgactiontype         : "eventmsgactiontype",
-#                *period                     : "period",
-#                *wctimestring               : "wctimestring",
-#                *pctimestring               : "pctimestring",
-#                *homedescription            : "homedescription",
-#                *neutraldescription         : "neutraldescription",
-#                *visitordescription         : "visitordescription",
-#                *score                      : "score",
-#                *scoremargin                : "scoremargin",
-#                *person1type                : "person1type",
-#                *player1_id                 : "player1_id",
-#                *player1_name               : "player1_name",
-#                *player1_team_id            : "player1_team_id",
-#                *player1_team_city          : "player1_team_city",
-#                *player1_team_nickname      : "player1_team_nickname",
-#                *player1_team_abbreviation  : "player1_team_abbreviation",
-#                *person2type                : "person2type",
-#                *player2_id                 : "player2_id",
-#                *player2_name               : "player2_name",
-#                *player2_team_id            : "player2_team_id",
-#                *player2_team_city          : "player2_team_city",
-#                *player2_team_nickname      : "player2_team_nickname",
-#                *player2_team_abbreviation  : "player2_team_abbreviation",
-#                *person3type                : "person3type",
-#                *player3_id                 : "player3_id",
-#                *player3_name               : "player3_name",
-#                *player3_team_id            : "player3_team_id",
-#                *player3_team_city          : "player3_team_city",
-#                *player3_team_nickname      : "player3_team_nickname",
-#                *player3_team_abbreviation  : "player3_team_abbreviation"
-#                }
+            PlayByPlay : {
+                *game_id          : "game_id",
+                *event_num        : "eventnum",
+                *event_msg_type   : "eventmsgtype",
+                *event_msg_action : "eventmsgactiontype",
+                *period           : "period",
+                *world_clock      : "wctimestring",
+                *game_clock       : "pctimestring",
+                *home_msg         : "homedescription",
+                *neutral_msg      : "neutraldescription",
+                *visitor_msg      : "visitordescription",
+                *visitor_score    : "score",
+                *home_score       : "score",
+                *person_type_1    : "person1type",
+                *id_1             : "player1_id",
+                *name_1           : "player1_name",
+                *team_id_1        : "player1_team_id",
+                *person_type_2    : "person2type",
+                *id_2             : "player2_id",
+                *name_2           : "player2_name",
+                *team_id_2        : "player2_team_id",
+                *person_type_3    : "person3type",
+                *id_3             : "player3_id",
+                *name_3           : "player3_name",
+                *team_id_3        : "player3_team_id"
+                }
 
 # regex i'm using to assist after copy and paste from chromium          
 #.*: "([A-Z0-9_]+)"

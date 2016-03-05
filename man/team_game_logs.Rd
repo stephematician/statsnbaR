@@ -7,23 +7,61 @@
 team_game_logs(league, season, season_type)
 }
 \arguments{
-\item{league}{TODO}
+\item{league}{A character value of league e.g. 'nba', 'd-league'.}
 
-\item{season}{TODO}
+\item{season}{A numeric value of the base season, e.g. 2015 for the 2015-2016
+season and so on.}
 
-\item{season_type}{TODO}
+\item{season_type}{A character value for the type of season, valid types are
+\code{regular}, \code{allstar}, \code{playoffs} and \code{preseason}.}
 }
 \value{
-TODO
+A data.frame containing the data for each game and team with
+  columns converted to the data types specified by statsnbaR's internal
+  YAML.
+  \describe{
+     \item{game_season}{integer - an id code for the season, e.g. 22015 for
+       the 2015-16 regular season, 12015 for the pre-season and so forth}
+     \item{team_id}{integer - unique identifier of the team}
+     \item{team_abbr}{character - abbrev. name of the team}
+     \item{team_name}{character - name of team that player belonged to in the
+       game}
+     \item{game_id}{numeric - unique numeric identifier of the game}
+     \item{game_date}{date - date game was played (or scheduled)}
+     \item{game_at_home}{logical - home (true) or away game (false)}
+     \item{win}{logical - win for the team (true) or loss (false)}
+     \item{mins}{numeric - minutes the team played on court in game}
+  }
+All other returned columns are described in the glossary provided at
+\url{http://stats.nba.com/help/glossary}.
 }
 \description{
 Retrieves all team game logs from stats.nba.com for a given season and
 league.
 }
 \details{
-TODO
+This function returns a set of measurements of a team for each game in a
+given \code{league}, \code{season} and \code{season_type} which indicates
+whether to query the regular season, playoffs, allstar game or preseason.
+All games will be returned twice, one for the home team entry and the other
+for the away team.
+
+Each game returned has a unique \code{game_id} which can be used for queries
+to play-by-play or shot-chart datasets.
+
+The team statistics returned are given as total values for the game.
+}
+\examples{
+\dontrun{
+    df <- player_game_logs(league='nba',
+                           season=2013,
+                           season_type='playoffs')
+    tail(df)
+}
+
 }
 \seealso{
 \code{\link{player_game_logs}}
+\url{http://stats.nba.com/help/glossary}
 }
 

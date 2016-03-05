@@ -36,6 +36,28 @@ of those two filter constructor functions.}
       teams values while they are on court.}
 }}
 }
+\value{
+A data.frame containing the aggregated player data retrieved with
+  columns converted to the data types specified by statsnbaR's internal
+  YAML.
+\describe{
+     \item{person_id}{integer - ID of the player, used in many other
+       datasets}
+     \item{player_name}{character - the player's first and last name}
+     \item{team_id}{integer - the \code{team_id} of the team the player plays for
+       according to the season selected (see \code{\link{filter_bio}})}
+     \item{team_abbr}{character - abbreviated team name}
+     \item{age}{integer - age of player in the season selected}
+     \item{games}{numeric - games played within the selected filters}
+     \item{wins}{numeric - wins in the player's games within the
+       selected filters}
+     \item{wins}{numeric - losses in the player's games within the
+       selected filters}
+     \item{mins}{numeric - minutes player was on court in game}
+}
+All other returned columns are described in the glossary provided at
+\url{http://stats.nba.com/help/glossary}.
+}
 \description{
 Retrieve the aggregated data for each player from stats.nba.com
 }
@@ -49,7 +71,7 @@ by the value of the \code{measurement} argument. The categories are
 \sQuote{base}, \sQuote{advanced}, \sQuote{miscellaneous}, \sQuote{scoring}
 and \sQuote{usage}.
 
-The filters are constructed by either \code{\link{filter_per_player}} if
+The query filters are constructed by either \code{\link{filter_per_player}} if
 \code{clutch=FALSE} or \code{\link{filter_per_player_clutch}} if
 \code{clutch=TRUE}. The list of potential filters are documented in those
 functions. The units that the values/data is aggregated into is determined
@@ -67,5 +89,6 @@ to plays that occured during clutch time.
 \seealso{
 \code{\link{filter_per_player}}
   \code{\link{filter_per_player_clutch}}
+  \url{http://stats.nba.com/help/glossary}
 }
 

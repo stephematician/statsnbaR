@@ -7,7 +7,7 @@
 map_result_values(df)
 }
 \arguments{
-\item{df}{The flattened JSON data.frame from stats.nba.com with statsnbaR
+\item{df}{The flattened JSON data.)frame from stats.nba.com with statsnbaR
 attribute names.}
 }
 \value{

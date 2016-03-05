@@ -44,8 +44,12 @@ A data.frame with names of current and historical players and the
 Retrieves current and historical player data from stats.nba.com
 }
 \details{
-Get the data for all the players that stats.nba.com recognises for a given
-\code{league}, and indicate their status for a given \code{season}.
+Retrieves basic information about players that stats.nba.com contains in
+their dataset for a given \code{league} and  given \code{season}. Basic
+information is the player's current team, and their first and final
+years in the league and so on. The \code{team_id} and \code{person_id} values
+returned should be unique for each team and player respectively, so these are
+useful keys to other data.
 }
 \examples{
 \dontrun{
