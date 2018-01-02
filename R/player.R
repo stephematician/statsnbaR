@@ -35,6 +35,8 @@ NULL
 #'   }
 #' @param season Numeric value of the base season, e.g. 2015 for the 2015-2016
 #'   season and so on.
+#' @param method Optional user-supplied function to retrieve JSON from 
+#'               stats.nba.com
 #' @return A data.frame with names of current and historical players and the
 #'   fields
 #'   \describe{
@@ -59,34 +61,39 @@ NULL
 #'   }
 #'
 #' @export
-get_players <- function(league, season) {
+get_players <- function(league, season, method=NULL, ...) {
+
+    if (!is.null(method))
+        if (!is.function(method))
+            stop(paste('[statsnbaR get_players] method should be supplied as',
+                       'a function.'))
 
     filters <- list(only_current=statsnbaR.ADL.filters$only_current$default,
                     season=statsnbaR.ADL.filters$season$default,
                     league=statsnbaR.ADL.filters$league$default)
 
     if (!missing(season)) {
-        if (!valid_filters(list(season=season),
-                           allow_na=FALSE))
-            stop(paste('[statsnbaR get_players]',
-                       season,
-                       'is not a valid season.'))
+        if (!valid_filters(list(season=season), allow_na=FALSE))
+            stop(paste('[statsnbaR get_players]', season, 'is not a valid',
+                       'season.'))
         filters$season <- season
     }
 
     if (!missing(league)) {
         if (!valid_filters(list(league=league)))
-            stop(paste('[statsnbaR get_players]',
-                       league,
-                       'is not a valid league name.'))
+            stop(paste('[statsnbaR get_players]', league, 'is not a valid',
+                       'league name.'))
         filters$league <- league
     }
 
-    r <- api_scrape('player_registry', filters=filters)
+    r <- api_scrape('player_registry', filters=filters, method=method, ...)
 
-    if (length(r) != 1) stop(paste('[statsnbaR get_players] unexpected number',
-                                   'of result sets returned by stats.nba.com'))
+    if (!(length(r) == 1))
+        stop(paste('[statsnbaR get_players] unexpected number of result sets',
+                   'returned by stats.nba.com'))
+
     return(r[[1]])
+
 }
 
 #' Get player biography data
@@ -120,6 +127,8 @@ get_players <- function(league, season) {
 #' @param filters A named list of key-value filters constructed by 
 #'   \code{\link{filter_bio}}. Full list of avaiable filters that statsnbaR
 #'   recognises is given in the documentation the filter constructor.
+#' @param method Optional user-supplied function to retrieve JSON from 
+#'               stats.nba.com
 #' @return A data.frame containing the player biography data with
 #'   columns converted to the data types specified by statsnbaR's internal
 #'   YAML.
@@ -148,20 +157,25 @@ get_players <- function(league, season) {
 #' \url{http://stats.nba.com/help/glossary/}
 #' 
 #' @export
-get_bio <- function(filters=filter_bio()) {
+get_bio <- function(filters=filter_bio(), method=NULL, ...) {
+
+    if (!is.null(method))
+        if (!is.function(method))
+            stop(paste('[statsnbaR get_bio] method should be supplied as a',
+                       'function.'))
 
     if (!valid_filters(filters))
-        stop(paste('[statsnbaR get_bio] filters must be a valid',
-                   'key-pair list recognised by statsnbaR'))
+        stop(paste('[statsnbaR get_bio] filters must be a valid key-pair list',
+                   'recognised by statsnbaR'))
 
-    r <- api_scrape('player_bio',
-                    filters=filters)
+    r <- api_scrape('player_bio', filters=filters, method=method, ...)
 
-    if (length(r) != 1)
-        stop(paste('[statsnbaR get_bio] unexpected number of',
-                   'result sets returned by stats.nba.com'))
+    if (!(length(r) == 1))
+        stop(paste('[statsnbaR get_bio] unexpected number of result sets',
+                   'returned by stats.nba.com'))
 
     return(r[[1]])
+
 }
 
                            
@@ -194,6 +208,8 @@ get_bio <- function(filters=filter_bio()) {
 #' @param clutch A logical value indicating whether to extract the
 #'   \sQuote{clutch} data, i.e. to only include plays that occurred during
 #'   \sQuote{clutch} time in the aggregation.
+#' @param method Optional user-supplied function to retrieve JSON from 
+#'               stats.nba.com
 #' @param measurement A character string representing the desired dataset
 #'   \describe{
 #'     \item{base}{The traditional player statistics such as field goals,
@@ -246,14 +262,21 @@ get_bio <- function(filters=filter_bio()) {
 #' @export
 per_player_agg <- function(filters=filter_per_player(),
                             clutch=FALSE,
-                            measurement='base') {
+                            measurement='base',
+                            method=NULL,
+                            ...) {
+
+    if (!is.null(method))
+        if (!is.function(method))
+            stop(paste('[statsnbaR per_player_agg] method should be supplied',
+                       'as a function.'))
 
     if (!valid_filters(filters))
         stop(paste('[statsnbaR per_player_agg] filters must be a valid',
                    'key-pair list recognised by statsnbaR'))
 
     if (!is.logical(clutch))
-        stop('[statsnbaR per_player_agg] \'clutch\' must be logical') 
+        stop('[statsnbaR per_player_agg] \'clutch\' must be logical')
 
     clutch_str <- ''
     if (clutch) {
@@ -294,11 +317,15 @@ per_player_agg <- function(filters=filter_per_player(),
     }
 
     r <- api_scrape(paste0('per_player_', measurement, clutch_str),
-                    filters=filters)
+                    filters=filters,
+                    method=method,
+                    ...)
 
-    if (length(r) != 1)
-        stop(paste('[statsnbaR per_player_agg] unexpected number of',
-                   'result sets returned by stats.nba.com'))
+    if (!(length(r) == 1))
+        stop(paste('[statsnbaR per_player_agg] unexpected number of result', 
+                   'sets returned by stats.nba.com'))
 
     return(r[[1]])
+
 }
+

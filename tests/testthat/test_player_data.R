@@ -43,8 +43,11 @@ test_that(
                                      clutch=TRUE),
                      paste('\\[statsnbaR per_player_agg\\] filters must be a',
                            'valid key-pair list recognised by statsnbaR'))
+        # config(ipresolve=1) passed to force IPv4 - but this may not be
+        # platform independent - should use curl_symbols
         expect_warning(per_player_agg(filter_per_player(),
-                                       clutch=TRUE),
+                                       clutch=TRUE,
+                                       config=config(ipresolve=1)),
                        paste('\\[statsnbaR per_player_agg\\] using default',
                              'clutch definition, to avoid this warning use',
                              'filter_player_clutch\\(\\) to construct filters',

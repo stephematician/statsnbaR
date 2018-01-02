@@ -5,7 +5,7 @@
 \title{Retrieve \sQuote{per player} aggregated data}
 \usage{
 per_player_agg(filters = filter_per_player(), clutch = FALSE,
-  measurement = "base")
+  measurement = "base", method = NULL, ...)
 }
 \arguments{
 \item{filters}{A named list of key-value filters constructed by either
@@ -35,6 +35,9 @@ of those two filter constructor functions.}
       statistics but measured as the players percentage contribution of the
       teams values while they are on court.}
 }}
+
+\item{method}{Optional user-supplied function to retrieve JSON from 
+stats.nba.com}
 }
 \value{
 A data.frame containing the aggregated player data retrieved with

@@ -4,12 +4,15 @@
 \alias{api_scrape}
 \title{Scrape stats.nba.com API and return statsnbaR data}
 \usage{
-api_scrape(endpoint, filters)
+api_scrape(endpoint, filters, method = NULL, ...)
 }
 \arguments{
 \item{endpoint}{Character string which identifies the statsnbaR endpoint}
 
 \item{filters}{Named list of statsnbaR key-value filters for the query}
+
+\item{method}{Optional user-supplied function to retrieve JSON from 
+stats.nba.com}
 }
 \value{
 A list of data.frames of the resultSets returned by stats.nba.com

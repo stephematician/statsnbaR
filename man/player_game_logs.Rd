@@ -4,7 +4,7 @@
 \alias{player_game_logs}
 \title{Retrieve player game logs}
 \usage{
-player_game_logs(league, season, season_type)
+player_game_logs(league, season, season_type, method = NULL, ...)
 }
 \arguments{
 \item{league}{A character value of league e.g. 'nba', 'd-league'.}
@@ -14,6 +14,11 @@ season and so on.}
 
 \item{season_type}{A character value for the type of season, valid types are
 \code{regular}, \code{allstar}, \code{playoffs} and \code{preseason}.}
+
+\item{method}{The function to use for retrieving data, must accept two
+arguments, \code{url} and \code{headers} .....}
+
+\item{...}{Further arguments to pass on to the \code{method} function.}
 }
 \value{
 A data.frame containing the data for each game and each player with

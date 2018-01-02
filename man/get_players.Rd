@@ -4,7 +4,7 @@
 \alias{get_players}
 \title{Retrieve current and historical player data}
 \usage{
-get_players(league, season)
+get_players(league, season, method = NULL, ...)
 }
 \arguments{
 \item{league}{A character value of league, current recognised values are:
@@ -15,6 +15,9 @@ get_players(league, season)
 
 \item{season}{Numeric value of the base season, e.g. 2015 for the 2015-2016
 season and so on.}
+
+\item{method}{Optional user-supplied function to retrieve JSON from 
+stats.nba.com}
 }
 \value{
 A data.frame with names of current and historical players and the

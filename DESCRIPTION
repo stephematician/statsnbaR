@@ -9,7 +9,7 @@ Authors@R: c(person("Stephen",
                      email='stephematician@gmail.com'))
 Author: Stephen Wade [aut, cre]
 Depends:
-    R (>= 3.2.1),
+    R (>= 3.0.1),
     httr
 Maintainer: Stephen Wade <stephematician@gmail.com>
 Description: Provides utility functions to download data from the API end-points

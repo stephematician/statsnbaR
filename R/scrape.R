@@ -105,6 +105,9 @@ NULL
 #'
 #' @param endpoint Character string which identifies the statsnbaR endpoint
 #' @param filters Named list of statsnbaR key-value filters for the query
+#' @param method Optional user-supplied function to retrieve JSON from 
+#'               stats.nba.com
+
 #' @return A list of data.frames of the resultSets returned by stats.nba.com
 #'   with inferred data types.
 #'
@@ -116,22 +119,18 @@ NULL
 #' @importFrom httr accept
 #' @importFrom httr modify_url
 #' @export
-api_scrape <- function(endpoint, filters) {
+api_scrape <- function(endpoint, filters, method=NULL, ...) {
 
-    if (!is.character(endpoint) ||
-        !(endpoint %in% names(statsnbaR.ADL.endpoints)))
-        stop(paste('[statsnbaR scrape]',
-                   endpoint,
-                   'is not a recognised reference to an endpoint of',
-                   'stats.nba.com'))
+    if (!(is.character(endpoint) && 
+                  (endpoint %in% names(statsnbaR.ADL.endpoints))))
+        stop(paste('[statsnbaR scrape]', endpoint, 'is not a recognised',
+                   'reference to an endpoint of stats.nba.com'))
 
     ADL.endpoint <- statsnbaR.ADL.endpoints[[endpoint]]
 
     if (!valid_filters(filters))
-        stop(paste('[statsnbaR scrape] filters must be a valid key-pair',
-                   'list recognised by statsnbaR'))
-        
-        
+        stop(paste('[statsnbaR scrape] filters must be a valid key-pair list',
+                   'recognised by statsnbaR'))
 
     # Check that all filters are valid for this endpoint, and that all the
     # filters required for the endpoint are specified.
@@ -162,16 +161,21 @@ api_scrape <- function(endpoint, filters) {
 
     # Get the stats.nba.com form of the filters
     ADL.filters <- map_filters(filters, ADL.endpoint)
+    url <- modify_url(statsnbaR.ADL.host,
+                      path=c(ADL.endpoint$api.path,
+                             ADL.endpoint$api.name),
+                      query=ADL.filters)
+    headers <- c(add_headers(Referer=ADL.endpoint$api.referrer,
+                             `User-Agent`=statsnbaR.ADL.user_agent,
+                             `Accept-Language`=statsnbaR.ADL.accept_language),
+                 accept('application/json'))$headers
 
-    # Let this fail if we don't get JSON data.
-    api_response <- GET(url=modify_url(statsnbaR.ADL.host,
-                                       path=c(ADL.endpoint$api.path,
-                                              ADL.endpoint$api.name)),
-                        query=ADL.filters,
-                        accept('application/json'), 
-                        add_headers(Referer=ADL.endpoint$api.referrer))
-
-    json_data <- content(api_response)
+    if (is.null(method)) {
+        # Let this fail if we don't get JSON data.
+        api_response <- GET(url=url, add_headers(.headers=headers), ...)
+        json_data <- content(api_response)
+    } else
+        json_data <- method(url=url, headers=headers, ...)
 
     if (!valid_results(json_data))
         stop(paste('[stats_nba scrape] invalid result returned by',
@@ -199,5 +203,4 @@ api_scrape <- function(endpoint, filters) {
            })
 
 }
-
 

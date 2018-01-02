@@ -4,12 +4,15 @@
 \alias{get_bio}
 \title{Get player biography data}
 \usage{
-get_bio(filters = filter_bio())
+get_bio(filters = filter_bio(), method = NULL, ...)
 }
 \arguments{
 \item{filters}{A named list of key-value filters constructed by 
 \code{\link{filter_bio}}. Full list of avaiable filters that statsnbaR
 recognises is given in the documentation the filter constructor.}
+
+\item{method}{Optional user-supplied function to retrieve JSON from 
+stats.nba.com}
 }
 \value{
 A data.frame containing the player biography data with

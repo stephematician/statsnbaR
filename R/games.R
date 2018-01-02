@@ -38,6 +38,10 @@ NULL
 #'   season and so on.
 #' @param season_type A character value for the type of season, valid types are
 #'   \code{regular}, \code{allstar}, \code{playoffs} and \code{preseason}.
+#' @param method The function to use for retrieving data, must accept two
+#'               arguments, \code{url} and \code{headers} .....
+#'
+#' @param ... Further arguments to pass on to the \code{method} function.
 #' @return A data.frame containing the data for each game and each player with
 #'   columns converted to the data types specified by statsnbaR's internal
 #'   YAML.
@@ -62,9 +66,12 @@ NULL
 #' \url{http://stats.nba.com/help/glossary}
 #'
 #' @export
-player_game_logs <- function(league,
-                             season,
-                             season_type) {
+player_game_logs <- function(league, season, season_type, method=NULL, ...) {
+
+    if (!is.null(method))
+        if (!is.function(method))
+            stop(paste('[statsnbaR player_game_logs] method should be',
+                       'supplied as a function.'))
 
     # At the moment, I figure if the user wants to sort the data another way,
     # they can just use any one of R's awesome functions for that.
@@ -78,35 +85,33 @@ player_game_logs <- function(league,
 
     if (!missing(season_type)) {
         if (!valid_filters(list(season_type=season_type)))
-            stop(paste('[statsnbaR player_game_logs]',
-                       season_type,
-                       'is not a valid season type.'))
+            stop(paste('[statsnbaR player_game_logs]', season_type, 'is not',
+                       'a valid season type.'))
         filters$season_type <- season_type
     }
 
     if (!missing(season)) {
-        if (!valid_filters(list(season=season),
-                           allow_na=FALSE))
-            stop(paste('[statsnbaR player_game_logs]',
-                       season,
-                       'is not a valid season.'))
+        if (!valid_filters(list(season=season), allow_na=FALSE))
+            stop(paste('[statsnbaR player_game_logs]', season, 'is not a',
+                       'valid season.'))
         filters$season <- season
     }
 
     if (!missing(league)) {
         if (!valid_filters(list(league=league)))
-            stop(paste('[statsnbaR player_game_logs]',
-                       league,
-                       'is not a valid league name.'))
+            stop(paste('[statsnbaR player_game_logs]', league, 'is not a',
+                       'valid league name.'))
         filters$league <- league
     }
 
-    r <- api_scrape('player_game_log', filters=filters)
+    r <- api_scrape('player_game_log', filters=filters, method=method, ...)
 
-    if (length(r) != 1) stop(paste('[statsnbaR player_game_logs] unexpected',
-                                   'number of result sets returned by',
-                                   'stats.nba.com'))
+    if (!(length(r) == 1))
+        stop(paste('[statsnbaR player_game_logs] unexpected number of result',
+                   'sets returned by stats.nba.com'))
+
     return(r[[1]])
+
 }
 
 #' Retrieve team game logs
@@ -139,6 +144,8 @@ player_game_logs <- function(league,
 #'   season and so on.
 #' @param season_type A character value for the type of season, valid types are
 #'   \code{regular}, \code{allstar}, \code{playoffs} and \code{preseason}.
+#' @param method Optional user-supplied function to retrieve JSON from 
+#'               stats.nba.com
 #' @return A data.frame containing the data for each game and team with
 #'   columns converted to the data types specified by statsnbaR's internal
 #'   YAML.
@@ -162,9 +169,12 @@ player_game_logs <- function(league,
 #' \url{http://stats.nba.com/help/glossary}
 #'
 #' @export
-team_game_logs <- function(league,
-                           season,
-                           season_type) {
+team_game_logs <- function(league, season, season_type, method=NULL, ...) {
+
+    if (!is.null(method))
+        if (!is.function(method))
+            stop(paste('[statsnbaR team_game_logs] method should be supplied',
+                       'as a function.'))
 
     # At the moment, I figure if the user wants to sort the data another way,
     # they can just use any one of R's awesome functions for that.
@@ -178,33 +188,32 @@ team_game_logs <- function(league,
 
     if (!missing(season_type)) {
         if (!valid_filters(list(season_type=season_type)))
-            stop(paste('[statsnbaR team_game_logs]',
-                       season_type,
-                       'is not a valid season type.'))
+            stop(paste('[statsnbaR team_game_logs]', season_type, 'is not a',
+                       'valid season type.'))
         filters$season_type <- season_type
     }
 
     if (!missing(season)) {
-        if (!valid_filters(list(season=season),
-                           allow_na=FALSE))
-            stop(paste('[statsnbaR team_game_logs]',
-                       season,
-                       'is not a valid season.'))
+        if (!valid_filters(list(season=season), allow_na=FALSE))
+            stop(paste('[statsnbaR team_game_logs]', season, 'is not a valid',
+                       'season.'))
         filters$season <- season
     }
 
     if (!missing(league)) {
         if (!valid_filters(list(league=league)))
-            stop(paste('[statsnbaR team_game_logs]',
-                       league,
-                       'is not a valid league name.'))
+            stop(paste('[statsnbaR team_game_logs]', league, 'is not a valid',
+                       'league name.'))
         filters$league <- league
     }
 
-    r <- api_scrape('team_game_log', filters=filters)
+    r <- api_scrape('team_game_log', filters=filters, method=method, ...)
 
-    if (length(r) != 1) stop(paste('[statsnbaR team_game_logs] unexpected',
-                                   'number of result sets returned by',
-                                   'stats.nba.com'))
+    if (!(length(r) == 1))
+        stop(paste('[statsnbaR team_game_logs] unexpected number of result',
+                   'sets returned by stats.nba.com'))
+
     return(r[[1]])
+
 }
+

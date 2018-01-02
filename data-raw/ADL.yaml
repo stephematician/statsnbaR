@@ -15,6 +15,8 @@ defs :
     - &logical { class : logical }
 
 host : "http://stats.nba.com/"
+user_agent: "Mozilla/5.0"
+accept_language: "en-US, en"
 
 # These mappings are all specified (manually) using Chromium's developer
 # tools to inspect the XHR parameter
@@ -588,7 +590,7 @@ endpoints :
     per_player_base :
         api.name     : "leaguedashplayerstats"
         api.path     : "stats"
-        api.referrer : "http://stats.nba.com/league/player/"
+        api.referrer : "http://stats.nba.com/players/traditional/"
         api.filters  : &ldps_filters {
             *college             : "College",
             *conference          : "Conference",

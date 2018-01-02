@@ -4,7 +4,7 @@
 \alias{team_game_logs}
 \title{Retrieve team game logs}
 \usage{
-team_game_logs(league, season, season_type)
+team_game_logs(league, season, season_type, method = NULL, ...)
 }
 \arguments{
 \item{league}{A character value of league e.g. 'nba', 'd-league'.}
@@ -14,6 +14,9 @@ season and so on.}
 
 \item{season_type}{A character value for the type of season, valid types are
 \code{regular}, \code{allstar}, \code{playoffs} and \code{preseason}.}
+
+\item{method}{Optional user-supplied function to retrieve JSON from 
+stats.nba.com}
 }
 \value{
 A data.frame containing the data for each game and team with

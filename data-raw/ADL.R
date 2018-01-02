@@ -19,6 +19,8 @@ statsnbaR.ADL.endpoints <- ADL_data$endpoints
 statsnbaR.ADL.filters <- ADL_data$filters
 statsnbaR.ADL.data <- ADL_data$data
 statsnbaR.ADL.host <- ADL_data$host
+statsnbaR.ADL.user_agent <- ADL_data$user_agent
+statsnbaR.ADL.accept_language <- ADL_data$accept_language
 
 # Need to check for any bad anchors
 # _yaml.bad-anchor_
@@ -177,5 +179,7 @@ use_data(statsnbaR.ADL.endpoints,
          statsnbaR.ADL.filters,
          statsnbaR.ADL.data,
          statsnbaR.ADL.host,
+         statsnbaR.ADL.user_agent,
+         statsnbaR.ADL.accept_language,
          pkg='.',
          internal=TRUE)

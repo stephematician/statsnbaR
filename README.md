@@ -1,6 +1,6 @@
 statsnbaR
 --------------
-_Stephen Wade 22/02/2016_
+_Stephen Wade 20/08/2017_
 
 ### R interface to stats.nba.com
 
@@ -9,9 +9,9 @@ This is a simple interface to stats.nba.com.
 Before going into any further details of this package, there are some
 house-keeping tasks:
 
-  1. All the data from the website is Copyright (c) 2016 NBA Media Ventures, LLC.
+  1. All the data from the website is Copyright (c) 2017 NBA Media Ventures, LLC.
 All rights reserved. When using this package you must agree to the
-[Terms of Use](http://www.nba.com/news/termsofuse.html) of the website. All the
+[Terms of Use][nba_com_terms_of_use] of the website. All the
 terms are important and must be read and agreed to. Pay extra attention to:
     * Section 1 - Ownership and User Restrictions;
     * Section 9 - NBA Statistics;
@@ -19,11 +19,10 @@ terms are important and must be read and agreed to. Pay extra attention to:
     * read all of it, really!
   2. As this package sends http requests to
   [stats.nba.com](http://stats.nba.com), you must read and agree to the terms of
-their [Privacy Policy](http://www.nba.com/news/privacy_policy.html)
-before using this package.
+their [Privacy Policy][nba_com_privacy_policy] before using this package.
   3. This code is licensed under the 
-[MIT license](https://www.r-project.org/Licenses/MIT), and you may use this package
-strictly under those terms.
+[MIT license][r_project_mit] , and you may use this package strictly under those
+terms.
 
 The details of the API end-points were manually sourced by the approach
 given in this 
@@ -48,14 +47,17 @@ a Coursera, can be found at <https://stephematician.shinyapps.io/nba_cluster>.
 ### Installation
 
 Installation is performed via github using the `devtools` package.
+
 ```r
 library(devtools)
 install_github('stephematician/statsnbaR')
 ```
 
 ### Player data examples
+
 Let's just have a look at the player data from the 2015-2016 season, and
 select the D-League players who are active:
+
 ```r
 library(statsnbaR)
 library(dplyr)
@@ -84,8 +86,8 @@ say a previous season (just to show you how to do this kind of query)
 
 ```r
 filter_last10 = filter_per_player(league='d-league',
-                                   last_n=10,
-                                   season=2014)
+                                  last_n=10,
+                                  season=2014)
 ppd_last10_2014 = per_player_data(filter_last10)
 
 ppd_last10_2014 = filter(ppd_last10_2014,
@@ -104,6 +106,7 @@ ppd_last10_2014 = filter(ppd_last10_2014,
 
 We can see that Aaron Craft was ballin' in the last ten games of the 2014-15
 D-League season. Did he ever play the NBA?
+
 ```r
 # 2015-16 is the default
 nba_players = get_players(league='nba')
@@ -115,10 +118,11 @@ Aww, empty data.frame. Oh well!
 #### Advanced statistics
 
 You can also get more advanced statistics by specifying `measurement='advanced'`
-in the call to per_player_data.
+in the call to `per_player_data`.
+
 ```r
 ppad_last10_2014 = per_player_data(filter_last10,
-                                    measurement='advanced')
+                                   measurement='advanced')
 ```
 
 Again selecting only the D-league players that played this year:
@@ -178,10 +182,12 @@ log.
 
 Game log queries are relatively similar to getting the names and details of
 players via `get_players()`.
+
 ```r
 gl_2013 = get_game_log(league='nba', season=2013)
 head(select(gl_2013, -c(season, team_abbr, team_name, fgm:plus_minus)))
 ```
+
 And the output produced looks something like:
 
 | person_id|player_name     |  game_id|game_date  |matchup     |win   | mins| video|
@@ -209,7 +215,8 @@ be the way to retrieve them_.
 As an example, we just use the playoffs from the 2014-15 season and try to find
 the finals games as we know that the finals were between Cleveland and Golden
 State:
-```r
+
+```
 playoff_logs = team_game_logs(season=2014,
                               season_type='playoff')
 cle_data = filter(playoff_logs, team_abbr=='CLE') %>%
@@ -242,6 +249,19 @@ team (I've omitted some of that output here via the `select` command).
 
 ### Notes
 
+#### Using curl/httr
+
+Timeouts can occur with some versions of `curl` due to incorrectly configured
+IPv6. One work-around is to pass a `config` argument on to `httr`, e.g.
+
+```
+get_players(league='d-league',
+            config=config(ipresolve=1))
+```
+
+The correct value for the `ipresolve` argument can be found via 
+`with(curl::curl_symbols, value(name == 'CURL_IPRESOLVE_V4'))`.
+
 #### Alternatives
 
 An Alternative to this package is the more highly featured
@@ -254,6 +274,7 @@ This package was partly inspired by
 #### Testing platform
 
 This package was built and tested with the following R software:
+
 ```
 > sessionInfo()
 R version 3.2.3 (2015-12-10)
@@ -266,3 +287,9 @@ other attached packages:
 loaded via a namespace (and not attached):
 [1] R6_2.1.2        curl_0.9.6      jsonlite_0.9.19
 ```
+
+[r_project_mit]: https://www.r-project.org/Licenses/MIT
+[nba_com_terms_of_use]: https://www.nba.com/termsofuse/
+[nba_com_privacy_policy]: http://www.nba.com/news/privacy_policy.html
+
+
